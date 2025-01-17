@@ -2,17 +2,21 @@ import UIKit
 
 final class CategoryCreatingViewController: UIViewController, UITextFieldDelegate {
     
+    // MARK: - Public Properties
+    var delegate: SelectCategoryViewController?
+    
+    // MARK: - Private Properties
     private let textField = UITextField()
     private let createButton = UIButton(type: .custom)
     private let titlelLabel = UILabel()
-    
-    var delegate: SelectCategoryViewController?
-    
+
+    // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
     }
-    
+
+    // MARK: - Private Methods
     private func setView() {
         view.backgroundColor = .white
         
@@ -24,7 +28,7 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
         view.addSubview(titlelLabel)
         
 
-        createButton.setTitle("Добавить категорию", for: .normal)
+        createButton.setTitle("Готово", for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         createButton.tintColor = .white
@@ -71,7 +75,7 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
     }
     
     @objc
-    func createButtonDidTap() {
+    private func createButtonDidTap() {
         if let delegate,
            let newCategory = textField.text {
             delegate.addCategory(categoryTitle: newCategory)
@@ -80,15 +84,13 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
     }
     
     @objc
-    func textFieldDidChange() {
+    private func textFieldDidChange() {
         if let text = textField.text, !text.isEmpty {
-            
-                createButton.isEnabled = true
-                createButton.backgroundColor = .black
+            createButton.isEnabled = true
+            createButton.backgroundColor = .black
         } else {
-            
-                createButton.isEnabled = false
-                createButton.backgroundColor = .gray
+            createButton.isEnabled = false
+            createButton.backgroundColor = .gray
         }
     }
 }

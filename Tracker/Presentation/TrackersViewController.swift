@@ -1,13 +1,6 @@
-//
-//  ViewController.swift
-//  Tracker
-//
-//  Created by Иван Иван on 02.12.2024.
-//
-
 import UIKit
 
-class TrackersViewController: UIViewController {
+final class TrackersViewController: UIViewController {
     
     // MARK: - Public Properties
     var categories: [TrackerCategory] = []
@@ -17,20 +10,19 @@ class TrackersViewController: UIViewController {
     // MARK: - Private Properties
     var collectionView: UICollectionView!
 
-    // MARK: - Initializers
-
     // MARK: - Overrides Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Mock Data
+        let mockSchedule = Schedule(days: [.monday])
         categories.append(TrackerCategory(title: "Домашний уют", trackers: [
-            Tracker(id: UUID(), name: "Поливать растения", color: .green, emoji: "❤️", schedule: "Schedule"),
+            Tracker(id: UUID(), name: "Поливать растения", color: .green, emoji: "❤️", schedule: mockSchedule),
         ]))
         categories.append(TrackerCategory(title: "Радостные мелочи", trackers: [
-            Tracker(id: UUID(), name: "Кошка заслонила камеру на созвоне", color: .orange, emoji: "😸", schedule: "Schedule"),
-            Tracker(id: UUID(), name: "Бабушка прислала открытку в вотсапе", color: .red, emoji: "🌸", schedule: "Schedule"),
-            Tracker(id: UUID(), name: "Бабушка прислала открытку в вотсапе", color: .magenta, emoji: "🌸", schedule: "Schedule"),
+            Tracker(id: UUID(), name: "Кошка заслонила камеру на созвоне", color: .orange, emoji: "😸", schedule: mockSchedule),
+            Tracker(id: UUID(), name: "Бабушка прислала открытку в вотсапе", color: .red, emoji: "🌸", schedule: mockSchedule),
+            Tracker(id: UUID(), name: "Бабушка прислала открытку в вотсапе", color: .magenta, emoji: "🌸", schedule: mockSchedule),
         ]))
         
         let layout = UICollectionViewFlowLayout()
@@ -144,15 +136,6 @@ class TrackersViewController: UIViewController {
             ])
         }
         else {
-//            let layout = UICollectionViewFlowLayout()
-//            layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-//            layout.minimumInteritemSpacing = 9
-//            layout.minimumLineSpacing = 0
-//            layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-//
-//            
-//            collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-            
             collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: TrackerCell.identifier)
             collectionView.register(TrackerHeaderCell.self,
                                     forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -184,11 +167,7 @@ class TrackersViewController: UIViewController {
     }
 }
 
-extension TrackersViewController: UICollectionViewDelegate {
-    
-}
-
-extension TrackersViewController: UICollectionViewDataSource {
+extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDelegate  {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         categories[section].trackers.count
     }
@@ -213,20 +192,6 @@ extension TrackersViewController: UICollectionViewDataSource {
 }
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView,
-//                        layout collectionViewLayout: UICollectionViewLayout,
-//                        referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        let indexPath = IndexPath(row: 0, section: section)
-//        let headerView = self.collectionView(collectionView,
-//                                             viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader,
-//                                             at: indexPath)
-//        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
-//                                                         height: collectionView.frame.height),
-//                                                  withHorizontalFittingPriority: .required,
-//                                                  verticalFittingPriority: .fittingSizeLevel)
-//
-//    }
-    
     func collectionView(_ collectionView: UICollectionView, 
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {

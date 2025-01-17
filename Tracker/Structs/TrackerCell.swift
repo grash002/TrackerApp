@@ -1,13 +1,11 @@
 import UIKit
 
-class TrackerCell: UICollectionViewCell {
+final class TrackerCell: UICollectionViewCell {
+    
+    // MARK: - Public Properties
     static let identifier = "trackerCell"
+    
     let viewCardTracker = UIView()
-    
-    var trackerCellColor: UIColor = .white
-    var countDays: Int = 0
-    var addButtonDidTapFlag = false
-    
     lazy var emojiLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
@@ -27,15 +25,6 @@ class TrackerCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var daysLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .black
-        label.text = "0 дней"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     lazy var addButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("+", for: .normal)
@@ -48,10 +37,20 @@ class TrackerCell: UICollectionViewCell {
         return button
     }()
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    // MARK: - Private Properties
+    private var trackerCellColor: UIColor = .white
+    private var countDays: Int = 0
+    private var addButtonDidTapFlag = false
+    private lazy var daysLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .black
+        label.text = "0 дней"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
+    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -71,7 +70,7 @@ class TrackerCell: UICollectionViewCell {
             viewCardTracker.topAnchor.constraint(equalTo: contentView.topAnchor),
             viewCardTracker.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             viewCardTracker.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            viewCardTracker.heightAnchor.constraint(equalToConstant: 90), 
+            viewCardTracker.heightAnchor.constraint(equalToConstant: 90),
             
             emojiLabel.topAnchor.constraint(equalTo: viewCardTracker.topAnchor, constant: 12),
             emojiLabel.trailingAnchor.constraint(equalTo: viewCardTracker.trailingAnchor, constant: -12),
@@ -102,16 +101,19 @@ class TrackerCell: UICollectionViewCell {
         emojiLabel.layer.masksToBounds = true
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Private Methods
     private func dateText(from number: Int) -> String {
         let lastDigit = number % 10
         let lastTwoDigits = number % 100
         
-        // Проверяем исключения для чисел, оканчивающихся на 11-14
         if (11...14).contains(lastTwoDigits) {
             return "\(number) дней"
         }
         
-        // Склонение в зависимости от последней цифры
         switch lastDigit {
         case 1:
             return "\(number) день"

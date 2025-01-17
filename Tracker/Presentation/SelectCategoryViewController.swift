@@ -1,19 +1,41 @@
 import UIKit
 
 final class SelectCategoryViewController: UIViewController {
+
+    // MARK: - Public Properties
     var delegateTrackersView: TrackersViewController?
     var delegateHabitCreating: HabitCreatingViewController?
-    let tableViewCategories = UITableView()
-     
+    
+    // MARK: - Private Properties
+    private let tableViewCategories = UITableView()
+    private var tableViewHeightConstraint: NSLayoutConstraint?
+
+    // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
     }
     
+    // MARK: - Public Methods
     func addCategory(categoryTitle: String) {
         delegateHabitCreating?.addCategory(toCategory: categoryTitle)
+        
+        let newCategoryIndex = IndexPath(row: (delegateTrackersView?.categories.count ?? 1) - 1, section: 0)
+        
+        tableViewCategories.performBatchUpdates({
+            tableViewCategories.insertRows(at: [newCategoryIndex], with: .automatic)
+        })
+        
+        tableViewHeightConstraint?.constant = CGFloat((delegateTrackersView?.categories.count ?? 0) * 75)
+
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+        
+        tableViewCategories.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
     
+    // MARK: - Private Methods
     private func setView() {
         guard let delegateTrackersView else { return }
         
@@ -71,6 +93,9 @@ final class SelectCategoryViewController: UIViewController {
 
             ])
         } else {
+            tableViewHeightConstraint = tableViewCategories.heightAnchor.constraint(equalToConstant: CGFloat(delegateTrackersView.categories.count * 75))
+            
+            guard let tableViewHeightConstraint else { return }
             
             tableViewCategories.dataSource = self
             tableViewCategories.delegate = self
@@ -90,7 +115,8 @@ final class SelectCategoryViewController: UIViewController {
                 tableViewCategories.topAnchor.constraint(equalTo: titlelLabel.bottomAnchor, constant: 24),
                 tableViewCategories.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
                 tableViewCategories.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
-                tableViewCategories.heightAnchor.constraint(equalToConstant: CGFloat(delegateTrackersView.categories.count * 75))
+                tableViewHeightConstraint,
+                tableViewCategories.bottomAnchor.constraint(lessThanOrEqualTo: createButton.topAnchor)
             ])
         }
         
@@ -106,13 +132,14 @@ final class SelectCategoryViewController: UIViewController {
     }
     
     @objc
-    func createButtonDidTap(){
+    private func createButtonDidTap(){
         let categoryCreatingViewController = CategoryCreatingViewController()
         categoryCreatingViewController.delegate = self
         self.present(categoryCreatingViewController, animated: true)
     }
 }
 
+    //MARK: - Extensions
 extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         1
@@ -129,7 +156,6 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
                                       for: indexPath)
         cell.backgroundColor = UIColor(named: "BackGroundFields")
-        //cell.accessoryType = .checkmark
         cell.selectionStyle = .none
         cell.textLabel?.text = delegateTrackersView?.categories[indexPath.row].title
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
@@ -143,19 +169,24 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView,
                    willDisplay cell: UITableViewCell,
                    forRowAt indexPath: IndexPath) {
-        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+        guard let delegateTrackersView = delegateTrackersView else { return }
+        let totalRows = delegateTrackersView.categories.count
+
+        if indexPath.row == totalRows - 1 {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        } else {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectRow = tableView.cellForRow(at: indexPath)
         selectRow?.accessoryType = .checkmark
+        delegateHabitCreating?.selectCategory(categoryTitle: delegateTrackersView?.categories[indexPath.row].title ?? "")
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let deselectRow = tableView.cellForRow(at: indexPath)
         deselectRow?.accessoryType = .none
     }
-    
 }

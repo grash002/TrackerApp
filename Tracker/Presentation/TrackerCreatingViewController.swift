@@ -2,14 +2,17 @@ import UIKit
 
 final class TrackerCreatingViewController: UIViewController {
     
+    // MARK: - Public Properties
     var delegate: TrackersViewController?
-    
+
+    // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setView()
     }
     
+    // MARK: - Private Methods
     private func setView() {
         view.backgroundColor = .white
         
@@ -68,7 +71,7 @@ final class TrackerCreatingViewController: UIViewController {
     }
     
     @objc
-    func habitCreateButtonDidTap() {
+    private func habitCreateButtonDidTap() {
         self.dismiss(animated: true)
         let habitCreatingViewController = HabitCreatingViewController()
         habitCreatingViewController.delegate = delegate

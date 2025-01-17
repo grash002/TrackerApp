@@ -1,34 +1,97 @@
 import UIKit
 
 final class HabitCreatingViewController: UIViewController, UITextFieldDelegate {
-
-    let textField = UITextField()
-    let tableViewButtons = UITableView()
-    let createButton = UIButton(type: .custom)
-    let dismissButton = UIButton(type: .custom)
-    let warningLabel = UILabel()
-    let characterLimit = 38
+    // MARK: - Public Properties
     var delegate: TrackersViewController?
 
+    // MARK: - Private Properties
+    private let textField = UITextField()
+    private let tableViewButtons = UITableView()
+    private let createButton = UIButton(type: .custom)
+    private let dismissButton = UIButton(type: .custom)
+    private let warningLabel = UILabel()
+    private let characterLimit = 38
     private var tableViewTopConstraint: NSLayoutConstraint!
-
-
+    private var selectedCategory: String?
+    private var selectedSchedule: Schedule?
+    
+    // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
     }
 
+    // MARK: - Public Methods
+    
+    func addTracker(tracker: Tracker, toCategory: String){
+        guard let delegate else { return }
+        
+        if let existingCategoryIndex = delegate.categories.firstIndex(where: { $0.title == toCategory }) {
+            delegate.categories[existingCategoryIndex].trackers.append(tracker)
+            
+            let newTrackerIndexPath = IndexPath(item: delegate.categories[existingCategoryIndex].trackers.count - 1,
+                                                section: existingCategoryIndex)
+            delegate.collectionView.performBatchUpdates({
+                delegate.collectionView.insertItems(at: [newTrackerIndexPath])
+            })
+            
+        } else {
+            let newCategory = TrackerCategory(title: toCategory,
+                                          trackers: [tracker])
+            delegate.categories.append(newCategory)
+            let newCategoryIndex = delegate.categories.count - 1
+            
+            delegate.collectionView.performBatchUpdates({
+                delegate.collectionView.insertSections(IndexSet(integer: newCategoryIndex))
+            }, completion: nil)
+        }
+    }
+    
+    func addCategory(toCategory: String){
+        guard let delegate else { return }
+        
+        let newCategory = TrackerCategory(title: toCategory,
+                                      trackers: [])
+        delegate.categories.append(newCategory)
+        let newCategoryIndex = delegate.categories.count - 1
+        
+        delegate.collectionView.performBatchUpdates({
+            delegate.collectionView.insertSections(IndexSet(integer: newCategoryIndex))
+        }, completion: nil)
+    }
+    
+    func selectSchedule(schedule: Schedule) {
+        selectedSchedule = schedule
+        tableViewButtons.reloadSections(IndexSet(integer: 0), with: .automatic)
+        tableViewButtons.separatorStyle = .singleLine
+        if selectedSchedule != nil {
+            enableButtonWithCond()
+        } else {
+            disableButton()
+        }
+    }
+    
+    func selectCategory(categoryTitle: String){
+        selectedCategory = categoryTitle
+        tableViewButtons.reloadSections(IndexSet(integer: 0), with: .automatic)
+        
+        enableButtonWithCond()
+    }
+    
+    // MARK: - Private Methods
     private func setView() {
         view.backgroundColor = .white
         
         tableViewButtons.dataSource = self
         tableViewButtons.delegate = self
-        tableViewButtons.register(UITableViewCell.self,
-                                  forCellReuseIdentifier: "cell")
+        tableViewButtons.register(HabitCreatingCell.self,
+                                  forCellReuseIdentifier: HabitCreatingCell.identifier)
         tableViewButtons.translatesAutoresizingMaskIntoConstraints = false
         tableViewButtons.backgroundColor = UIColor(named: "BackGroundFields")
-        tableViewButtons.layer.cornerRadius = 16
+        tableViewButtons.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableViewButtons.tableFooterView = UIView()
+        tableViewButtons.separatorStyle = .singleLine
+        tableViewButtons.layer.cornerRadius = 16
         tableViewButtons.isScrollEnabled = false
         tableViewButtons.separatorInset = UIEdgeInsets(top: 0,
                                                        left: 16,
@@ -74,10 +137,10 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate {
         createButton.layer.cornerRadius = 16
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         createButton.tintColor = .white
-        createButton.backgroundColor = .gray
         createButton.addTarget(self,
                                action: #selector(createButtonDidTap),
                                for: .touchUpInside)
+        disableButton()
         
         dismissButton.setTitle("Отменить", for: .normal)
         dismissButton.layer.cornerRadius = 16
@@ -123,8 +186,22 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate {
         ])
     }
     
+    private func enableButtonWithCond() {
+        if  textField.text != "" &&
+            textField.text != nil &&
+            selectedCategory != nil &&
+                selectedSchedule != nil {
+            createButton.backgroundColor = .black
+            createButton.isEnabled = true
+        }
+    }
     
-    func updateButtonSpacing(withWarningVisible isVisible: Bool) {
+    private func disableButton() {
+        createButton.isEnabled = false
+        createButton.backgroundColor = .gray
+    }
+    
+    private func updateButtonSpacing(withWarningVisible isVisible: Bool) {
         let additionalSpacing: CGFloat = isVisible ? 32 : 0
         tableViewTopConstraint.constant = additionalSpacing
         UIView.animate(withDuration: 0.25) {
@@ -132,77 +209,43 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func addTracker(tracker: Tracker, toCategory: String){
-        guard let delegate else { return }
-        
-        if let existingCategoryIndex = delegate.categories.firstIndex(where: { $0.title == toCategory }) {
-            delegate.categories[existingCategoryIndex].trackers.append(tracker)
-            
-            let newTrackerIndexPath = IndexPath(item: delegate.categories[existingCategoryIndex].trackers.count - 1,
-                                                section: existingCategoryIndex)
-            delegate.collectionView.performBatchUpdates({
-                delegate.collectionView.insertItems(at: [newTrackerIndexPath])
-            })
-            
-        } else {
-            let newCategory = TrackerCategory(title: toCategory,
-                                          trackers: [tracker])
-            delegate.categories.append(newCategory)
-            let newCategoryIndex = delegate.categories.count - 1
-            
-            delegate.collectionView.performBatchUpdates({
-                delegate.collectionView.insertSections(IndexSet(integer: newCategoryIndex))
-            }, completion: nil)
-        }
-    }
-    
-    func addCategory(toCategory: String){
-        guard let delegate else { return }
-        
-        let newCategory = TrackerCategory(title: toCategory,
-                                      trackers: [])
-        delegate.categories.append(newCategory)
-        let newCategoryIndex = delegate.categories.count - 1
-        
-        delegate.collectionView.performBatchUpdates({
-            delegate.collectionView.insertSections(IndexSet(integer: newCategoryIndex))
-        }, completion: nil)
-    }
-    
     @objc
-    func textFieldDidChange(_ textField: UITextField) {
-        if textField.text?.count ?? 0 >= characterLimit,
-           let text = textField.text, !text.isEmpty {
+    private func textFieldDidChange(_ textField: UITextField) {
+        if textField.text?.count ?? 0 >= characterLimit{
             warningLabel.isHidden = false
             updateButtonSpacing(withWarningVisible: true)
-            createButton.isEnabled = false
-            createButton.backgroundColor = .gray
         } else {
             updateButtonSpacing(withWarningVisible: false)
             warningLabel.isHidden = true
-            createButton.isEnabled = true
-            createButton.backgroundColor = .black
+        }
+        
+        if let text = textField.text, !text.isEmpty,
+           text.count < characterLimit {
+            enableButtonWithCond()
+        } else {
+            disableButton()
         }
     }
     
     @objc
-    func createButtonDidTap() {
+    private func createButtonDidTap() {
         guard let text = textField.text,
-              let delegate,
-        let color = UIColor(named: "YPBlue") else { return }
+        let color = UIColor(named: "YPBlue"),
+        let selectedSchedule else { return }
         
-        let newTracker = Tracker(id: UUID(), name: text, color: color, emoji: "🏂🏻", schedule: "")
-        addTracker(tracker: newTracker, toCategory: "Радостные мелочи")
+        let newTracker = Tracker(id: UUID(), name: text, color: color, emoji: "🏂🏻", schedule: selectedSchedule)
+        addTracker(tracker: newTracker, toCategory: selectedCategory ?? "")
         
         self.dismiss(animated: true)
     }
     
     @objc
-    func dismissButtonDidTap() {
+    private func dismissButtonDidTap() {
         self.dismiss(animated: true)
     }
 }
 
+// MARK: - Extensions
 extension HabitCreatingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -216,20 +259,21 @@ extension HabitCreatingViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, 
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
-                                                 for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: HabitCreatingCell.identifier,
+                                                       for: indexPath) as? HabitCreatingCell else { return UITableViewCell()}
         cell.backgroundColor = UIColor(named: "BackGroundFields")
         cell.accessoryType = .disclosureIndicator
         cell.selectionStyle = .none
-        cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
+        let mainText = indexPath.row == 0 ? "Категория" : "Расписание"
+        let subText = indexPath.row == 0 ? selectedCategory : selectedSchedule?.toString()
+        cell.configure(mainText: mainText, subText: subText)
         return cell
+        
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-         print("Category did select")
          tableView.deselectRow(at: indexPath, animated: false)
             
             let selectCategoryViewController = SelectCategoryViewController()
@@ -238,8 +282,11 @@ extension HabitCreatingViewController: UITableViewDelegate, UITableViewDataSourc
             self.present(selectCategoryViewController, animated: true)
             
         } else {
-         print("Raspisanii did select")
-         tableView.deselectRow(at: indexPath, animated: false)
+            print("Raspisanii did select")
+            tableView.deselectRow(at: indexPath, animated: false)
+            let selectScheduleViewController = SelectScheduleViewController()
+            selectScheduleViewController.delegate = self
+            self.present(selectScheduleViewController, animated: true)
         }
     }
     
@@ -247,13 +294,6 @@ extension HabitCreatingViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
     }
-    
-    func tableView(_ tableView: UITableView, 
-                   willDisplay cell: UITableViewCell,
-                   forRowAt indexPath: IndexPath) {
-        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        }
-    }
+
 }
 
