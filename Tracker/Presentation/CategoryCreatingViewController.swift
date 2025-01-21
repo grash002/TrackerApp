@@ -16,6 +16,7 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
         setView()
     }
 
+
     // MARK: - Private Methods
     private func setView() {
         view.backgroundColor = .white

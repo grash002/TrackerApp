@@ -8,7 +8,77 @@ final class SelectCategoryViewController: UIViewController {
     
     // MARK: - Private Properties
     private let tableViewCategories = UITableView()
-    private var tableViewHeightConstraint: NSLayoutConstraint?
+    lazy private var tableViewHeightConstraint: NSLayoutConstraint = {
+        tableViewCategories.heightAnchor.constraint(equalToConstant: CGFloat((delegateTrackersView?.categories.count ?? 0) * 75))
+    }()
+    
+    lazy private var createButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitle("Добавить категорию", for: .normal)
+        button.layer.cornerRadius = 16
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.tintColor = .white
+        button.backgroundColor = .black
+        button.addTarget(self,
+                               action: #selector(createButtonDidTap),
+                               for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(button)
+        return button
+    }()
+    
+    lazy private var titlelLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Категория"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(label)
+        return label
+    }()
+    
+    lazy private var imageNoCategories: UIImageView = {
+        let image = UIImageView(image: UIImage(named: "NoTrackers"))
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
+    lazy private var stackViewNoCategories: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews:[self.imageNoCategories,
+                                                      self.labelNoTrackers])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 8
+        self.view.addSubview(stackView)
+        return stackView
+    }()
+    
+    lazy private var labelNoTrackers = {
+        let label = UILabel()
+        label.text = "Привычки и события можно\n объединить по смыслу"
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        return label
+    }()
+    
+    lazy private var noCategoryConstr: [NSLayoutConstraint] = [
+        imageNoCategories.heightAnchor.constraint(equalToConstant: 80),
+        imageNoCategories.widthAnchor.constraint(equalToConstant: 80),
+        stackViewNoCategories.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+        stackViewNoCategories.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+    ]
+    
+    lazy private var categoryConstr: [NSLayoutConstraint] = {[
+        tableViewCategories.topAnchor.constraint(equalTo: titlelLabel.bottomAnchor, constant: 24),
+        tableViewCategories.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+        tableViewCategories.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
+        tableViewHeightConstraint,
+        tableViewCategories.bottomAnchor.constraint(lessThanOrEqualTo: createButton.topAnchor)
+    ]}()
 
     // MARK: - Overrides Methods
     override func viewDidLoad() {
@@ -19,14 +89,16 @@ final class SelectCategoryViewController: UIViewController {
     // MARK: - Public Methods
     func addCategory(categoryTitle: String) {
         delegateHabitCreating?.addCategory(toCategory: categoryTitle)
+        refreshConstraints()
+//        let newCategoryIndex = IndexPath(row: (delegateTrackersView?.categories.count ?? 1) - 1, section: 0)
         
-        let newCategoryIndex = IndexPath(row: (delegateTrackersView?.categories.count ?? 1) - 1, section: 0)
+        tableViewCategories.reloadData()
         
-        tableViewCategories.performBatchUpdates({
-            tableViewCategories.insertRows(at: [newCategoryIndex], with: .automatic)
-        })
+//        tableViewCategories.performBatchUpdates({
+//            tableViewCategories.insertRows(at: [newCategoryIndex], with: .automatic)
+//        })
         
-        tableViewHeightConstraint?.constant = CGFloat((delegateTrackersView?.categories.count ?? 0) * 75)
+        tableViewHeightConstraint.constant = CGFloat((delegateTrackersView?.categories.count ?? 0) * 75)
 
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
@@ -35,90 +107,40 @@ final class SelectCategoryViewController: UIViewController {
         tableViewCategories.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
     
+    func refreshConstraints() {       
+    if delegateTrackersView?.categories.count == 0 {
+        tableViewCategories.isHidden = true
+        stackViewNoCategories.isHidden = false
+        NSLayoutConstraint.activate(noCategoryConstr)
+        NSLayoutConstraint.deactivate(categoryConstr)
+        
+    } else {
+        tableViewCategories.isHidden = false
+        stackViewNoCategories.isHidden = true
+        
+        tableViewCategories.dataSource = self
+        tableViewCategories.delegate = self
+        tableViewCategories.register(UITableViewCell.self,
+                                  forCellReuseIdentifier: "cell")
+        tableViewCategories.translatesAutoresizingMaskIntoConstraints = false
+        tableViewCategories.backgroundColor = .white
+        tableViewCategories.layer.cornerRadius = 16
+        tableViewCategories.tableFooterView = UIView()
+        tableViewCategories.separatorInset = UIEdgeInsets(top: 0,
+                                                       left: 16,
+                                                       bottom: 0,
+                                                       right: 16)
+        view.addSubview(tableViewCategories)
+        
+        NSLayoutConstraint.activate(categoryConstr)
+        NSLayoutConstraint.deactivate(noCategoryConstr)
+    }
+    }
+    
     // MARK: - Private Methods
     private func setView() {
-        guard let delegateTrackersView else { return }
-        
         view.backgroundColor = .white
-        
-        let titlelLabel = UILabel()
-        titlelLabel.text = "Категория"
-        titlelLabel.textAlignment = .center
-        titlelLabel.font = UIFont.systemFont(ofSize: 16)
-        titlelLabel.textColor = .black
-        titlelLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(titlelLabel)
-        
-        let createButton = UIButton(type: .custom)
-        createButton.setTitle("Добавить категорию", for: .normal)
-        createButton.layer.cornerRadius = 16
-        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        createButton.tintColor = .white
-        createButton.backgroundColor = .black
-        createButton.addTarget(self,
-                               action: #selector(createButtonDidTap),
-                               for: .touchUpInside)
-        createButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(createButton)
-        
-        if delegateTrackersView.categories.count == 0 {
-            let imageNoCategories = UIImageView(image: UIImage(named: "NoTrackers"))
-            imageNoCategories.translatesAutoresizingMaskIntoConstraints = false
-            
-            
-            let labelNoTrackers = UILabel()
-            labelNoTrackers.text = "Привычки и события можно\n объединить по смыслу"
-            labelNoTrackers.font = UIFont.systemFont(ofSize: 12)
-            labelNoTrackers.textAlignment = .center
-            labelNoTrackers.numberOfLines = 0
-            labelNoTrackers.lineBreakMode = .byWordWrapping
-            
-            let stackView = UIStackView(arrangedSubviews:
-                                            [imageNoCategories,
-                                             labelNoTrackers])
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            
-            stackView.axis = .vertical
-            stackView.alignment = .center
-            stackView.spacing = 8
-            
-            view.addSubview(stackView)
-            
-            NSLayoutConstraint.activate([
-                imageNoCategories.heightAnchor.constraint(equalToConstant: 80),
-                imageNoCategories.widthAnchor.constraint(equalToConstant: 80),
-                stackView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-                stackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-                
-
-            ])
-        } else {
-            tableViewHeightConstraint = tableViewCategories.heightAnchor.constraint(equalToConstant: CGFloat(delegateTrackersView.categories.count * 75))
-            
-            guard let tableViewHeightConstraint else { return }
-            
-            tableViewCategories.dataSource = self
-            tableViewCategories.delegate = self
-            tableViewCategories.register(UITableViewCell.self,
-                                      forCellReuseIdentifier: "cell")
-            tableViewCategories.translatesAutoresizingMaskIntoConstraints = false
-            tableViewCategories.backgroundColor = .white
-            tableViewCategories.layer.cornerRadius = 16
-            tableViewCategories.tableFooterView = UIView()
-            tableViewCategories.separatorInset = UIEdgeInsets(top: 0,
-                                                           left: 16,
-                                                           bottom: 0,
-                                                           right: 16)
-            view.addSubview(tableViewCategories)
-            
-            NSLayoutConstraint.activate([
-                tableViewCategories.topAnchor.constraint(equalTo: titlelLabel.bottomAnchor, constant: 24),
-                tableViewCategories.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
-                tableViewCategories.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
-                tableViewHeightConstraint,
-                tableViewCategories.bottomAnchor.constraint(lessThanOrEqualTo: createButton.topAnchor)
-            ])
-        }
+        refreshConstraints()
         
         NSLayoutConstraint.activate([
             titlelLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
@@ -164,19 +186,6 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   willDisplay cell: UITableViewCell,
-                   forRowAt indexPath: IndexPath) {
-        guard let delegateTrackersView = delegateTrackersView else { return }
-        let totalRows = delegateTrackersView.categories.count
-
-        if indexPath.row == totalRows - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        } else {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -28,36 +28,23 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate {
         
         if let existingCategoryIndex = delegate.categories.firstIndex(where: { $0.title == toCategory }) {
             delegate.categories[existingCategoryIndex].trackers.append(tracker)
-            
-            let newTrackerIndexPath = IndexPath(item: delegate.categories[existingCategoryIndex].trackers.count - 1,
-                                                section: existingCategoryIndex)
-            delegate.collectionView.performBatchUpdates({
-                delegate.collectionView.insertItems(at: [newTrackerIndexPath])
-            })
+            delegate.refreshTrackersConstraints()
             
         } else {
             let newCategory = TrackerCategory(title: toCategory,
                                           trackers: [tracker])
             delegate.categories.append(newCategory)
-            let newCategoryIndex = delegate.categories.count - 1
-            
-            delegate.collectionView.performBatchUpdates({
-                delegate.collectionView.insertSections(IndexSet(integer: newCategoryIndex))
-            }, completion: nil)
+            delegate.refreshTrackersConstraints()
         }
     }
     
     func addCategory(toCategory: String){
         guard let delegate else { return }
-        
-        let newCategory = TrackerCategory(title: toCategory,
-                                      trackers: [])
-        delegate.categories.append(newCategory)
-        let newCategoryIndex = delegate.categories.count - 1
-        
-        delegate.collectionView.performBatchUpdates({
-            delegate.collectionView.insertSections(IndexSet(integer: newCategoryIndex))
-        }, completion: nil)
+        if !delegate.categories.contains(where: {$0.title.uppercased() == toCategory.uppercased()}) {
+            let newCategory = TrackerCategory(title: toCategory,
+                                          trackers: [])
+            delegate.categories.append(newCategory)
+        }
     }
     
     func selectSchedule(schedule: Schedule) {
@@ -282,7 +269,6 @@ extension HabitCreatingViewController: UITableViewDelegate, UITableViewDataSourc
             self.present(selectCategoryViewController, animated: true)
             
         } else {
-            print("Raspisanii did select")
             tableView.deselectRow(at: indexPath, animated: false)
             let selectScheduleViewController = SelectScheduleViewController()
             selectScheduleViewController.delegate = self

@@ -4,6 +4,7 @@ final class TrackerCell: UICollectionViewCell {
     
     // MARK: - Public Properties
     static let identifier = "trackerCell"
+    var saveCountDays: ((Bool) -> Void)?
     
     let viewCardTracker = UIView()
     lazy var emojiLabel: UILabel = {
@@ -41,7 +42,7 @@ final class TrackerCell: UICollectionViewCell {
     private var trackerCellColor: UIColor = .white
     private var countDays: Int = 0
     private var addButtonDidTapFlag = false
-    private lazy var daysLabel: UILabel = {
+    lazy var daysLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .black
@@ -105,6 +106,33 @@ final class TrackerCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func configure(nameTracker: String, emoji: String, color: UIColor, isDidTap: Bool, count: Int, isDisableAddButton: Bool, closure: @escaping ((Bool) -> Void)) {
+        emojiLabel.text = emoji
+        titleLabel.text = nameTracker
+        viewCardTracker.backgroundColor = color
+        addButton.backgroundColor = color
+        saveCountDays = closure
+        countDays = count
+        daysLabel.text = dateText(from: countDays)
+        addButtonDidTapFlag = isDidTap
+        
+        if addButtonDidTapFlag {
+            addButton.setTitle("", for: .normal)
+            addButton.setImage(UIImage(named: "Done"), for: .normal)
+            addButton.alpha = 0.7
+        } else {
+            self.addButton.setTitle("+", for: .normal)
+            self.addButton.setImage(UIImage(), for: .normal)
+            self.addButton.alpha = 1
+        }
+        if isDisableAddButton {
+            addButton.isEnabled = false
+        } else {
+            addButton.isEnabled = true
+        }
+        
+    }
+    
     // MARK: - Private Methods
     private func dateText(from number: Int) -> String {
         let lastDigit = number % 10
@@ -126,21 +154,6 @@ final class TrackerCell: UICollectionViewCell {
     
     @objc
     private func addButtonDidTap() {
-        if !addButtonDidTapFlag {
-            addButtonDidTapFlag = !addButtonDidTapFlag
-            countDays += 1
-            self.daysLabel.text = dateText(from: countDays)
-            self.addButton.setTitle("", for: .normal)
-            self.addButton.setImage(UIImage(named: "Done"), for: .normal)
-            self.addButton.alpha = 0.7
-        }
-        else {
-            addButtonDidTapFlag = !addButtonDidTapFlag
-            countDays -= 1
-            self.daysLabel.text = dateText(from: countDays)
-            self.addButton.setTitle("+", for: .normal)
-            self.addButton.setImage(UIImage(), for: .normal)
-            self.addButton.alpha = 1
-        }
+        saveCountDays?(addButtonDidTapFlag)
     }
 }

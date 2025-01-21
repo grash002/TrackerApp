@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE23FCB22D3EA65000495FF7 /* CompletedTrackers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE23FCB12D3EA65000495FF7 /* CompletedTrackers.swift */; };
 		EE3055872D1AAB5800F696AB /* TrackerCreatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3055862D1AAB5800F696AB /* TrackerCreatingViewController.swift */; };
 		EE3055892D1ABCFC00F696AB /* HabitCreatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3055882D1ABCFC00F696AB /* HabitCreatingViewController.swift */; };
 		EE9ED80D2CFE4DC100E9AB10 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9ED80C2CFE4DC100E9AB10 /* AppDelegate.swift */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EE23FCB12D3EA65000495FF7 /* CompletedTrackers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTrackers.swift; sourceTree = "<group>"; };
 		EE3055862D1AAB5800F696AB /* TrackerCreatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCreatingViewController.swift; sourceTree = "<group>"; };
 		EE3055882D1ABCFC00F696AB /* HabitCreatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCreatingViewController.swift; sourceTree = "<group>"; };
 		EE9ED8092CFE4DC100E9AB10 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +111,7 @@
 				EEDD9D8D2D39A76400F25189 /* ScheduleCell.swift */,
 				EEDD9D892D39A1CD00F25189 /* WeekDay.swift */,
 				EEDD9D8B2D39A2DE00F25189 /* Schedule.swift */,
+				EE23FCB12D3EA65000495FF7 /* CompletedTrackers.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -219,6 +222,7 @@
 				EEBADD182D396655000147DA /* HabitCreatingCell.swift in Sources */,
 				EEDD9D882D399BC800F25189 /* SelectScheduleViewController.swift in Sources */,
 				EE3055872D1AAB5800F696AB /* TrackerCreatingViewController.swift in Sources */,
+				EE23FCB22D3EA65000495FF7 /* CompletedTrackers.swift in Sources */,
 				EEF2E5442D1355590092C8A9 /* TrackerCell.swift in Sources */,
 				EEBADD162D38590C000147DA /* CategoryCreatingViewController.swift in Sources */,
 				EEDD9D8A2D39A1CD00F25189 /* WeekDay.swift in Sources */,
