@@ -3,7 +3,7 @@ import UIKit
 final class TrackerCreatingViewController: UIViewController {
     
     // MARK: - Public Properties
-    var delegate: TrackersViewController?
+    weak var delegate: TrackersViewController?
 
     // MARK: - Overrides Methods
     override func viewDidLoad() {

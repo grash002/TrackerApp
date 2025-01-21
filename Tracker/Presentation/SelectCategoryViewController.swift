@@ -3,8 +3,8 @@ import UIKit
 final class SelectCategoryViewController: UIViewController {
 
     // MARK: - Public Properties
-    var delegateTrackersView: TrackersViewController?
-    var delegateHabitCreating: HabitCreatingViewController?
+    weak var delegateTrackersView: TrackersViewController?
+    weak var delegateHabitCreating: HabitCreatingViewController?
     
     // MARK: - Private Properties
     private let tableViewCategories = UITableView()

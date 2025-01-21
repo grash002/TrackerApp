@@ -3,7 +3,7 @@ import UIKit
 final class CategoryCreatingViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Public Properties
-    var delegate: SelectCategoryViewController?
+    weak var delegate: SelectCategoryViewController?
     
     // MARK: - Private Properties
     private let textField = UITextField()

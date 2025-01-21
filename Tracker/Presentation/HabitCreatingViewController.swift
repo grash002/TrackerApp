@@ -2,7 +2,7 @@ import UIKit
 
 final class HabitCreatingViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Public Properties
-    var delegate: TrackersViewController?
+    weak var delegate: TrackersViewController?
 
     // MARK: - Private Properties
     private let textField = UITextField()

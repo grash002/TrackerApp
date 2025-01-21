@@ -35,9 +35,9 @@ final class HabitCreatingCell: UITableViewCell {
             stackView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor),
             stackView.centerYAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerYAnchor)
         ])
-        
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
