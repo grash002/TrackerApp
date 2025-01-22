@@ -4,7 +4,7 @@ final class SelectCategoryViewController: UIViewController {
 
     // MARK: - Public Properties
     weak var delegateTrackersView: TrackersViewController?
-    weak var delegateHabitCreating: HabitCreatingViewController?
+    weak var delegateCreatingView: CreatingViewControllerProtocol?
     
     // MARK: - Private Properties
     private let tableViewCategories = UITableView()
@@ -16,7 +16,7 @@ final class SelectCategoryViewController: UIViewController {
         let button = UIButton(type: .custom)
         button.setTitle("Добавить категорию", for: .normal)
         button.layer.cornerRadius = 16
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.tintColor = .white
         button.backgroundColor = .black
         button.addTarget(self,
@@ -27,11 +27,11 @@ final class SelectCategoryViewController: UIViewController {
         return button
     }()
     
-    lazy private var titlelLabel: UILabel = {
+    lazy private var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Категория"
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(label)
@@ -58,7 +58,7 @@ final class SelectCategoryViewController: UIViewController {
     lazy private var labelNoTrackers = {
         let label = UILabel()
         label.text = "Привычки и события можно\n объединить по смыслу"
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -73,7 +73,7 @@ final class SelectCategoryViewController: UIViewController {
     ]
     
     lazy private var categoryConstr: [NSLayoutConstraint] = {[
-        tableViewCategories.topAnchor.constraint(equalTo: titlelLabel.bottomAnchor, constant: 24),
+        tableViewCategories.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
         tableViewCategories.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
         tableViewCategories.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
         tableViewHeightConstraint,
@@ -88,18 +88,10 @@ final class SelectCategoryViewController: UIViewController {
     
     // MARK: - Public Methods
     func addCategory(categoryTitle: String) {
-        delegateHabitCreating?.addCategory(toCategory: categoryTitle)
+        delegateCreatingView?.addCategory(toCategory: categoryTitle)
         refreshConstraints()
-//        let newCategoryIndex = IndexPath(row: (delegateTrackersView?.categories.count ?? 1) - 1, section: 0)
-        
         tableViewCategories.reloadData()
-        
-//        tableViewCategories.performBatchUpdates({
-//            tableViewCategories.insertRows(at: [newCategoryIndex], with: .automatic)
-//        })
-        
         tableViewHeightConstraint.constant = CGFloat((delegateTrackersView?.categories.count ?? 0) * 75)
-
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }
@@ -143,9 +135,9 @@ final class SelectCategoryViewController: UIViewController {
         refreshConstraints()
         
         NSLayoutConstraint.activate([
-            titlelLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
-            titlelLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            titlelLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
+            titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             createButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             createButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -191,7 +183,7 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectRow = tableView.cellForRow(at: indexPath)
         selectRow?.accessoryType = .checkmark
-        delegateHabitCreating?.selectCategory(categoryTitle: delegateTrackersView?.categories[indexPath.row].title ?? "")
+        delegateCreatingView?.selectCategory(categoryTitle: delegateTrackersView?.categories[indexPath.row].title ?? "")
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

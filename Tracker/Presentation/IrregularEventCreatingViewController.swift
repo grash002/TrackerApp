@@ -1,6 +1,6 @@
 import UIKit
 
-final class HabitCreatingViewController: UIViewController, UITextFieldDelegate, CreatingViewControllerProtocol {
+final class IrregularEventCreatingViewController: UIViewController, CreatingViewControllerProtocol, UITextFieldDelegate {
     // MARK: - Public Properties
     weak var delegate: TrackersViewController?
 
@@ -13,7 +13,7 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate, 
     private let characterLimit = 38
     private var tableViewTopConstraint: NSLayoutConstraint!
     private var selectedCategory: String?
-    private var selectedSchedule: Schedule?
+    private var selectedSchedule: Schedule = Schedule(days: [.eternity])
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
@@ -55,17 +55,12 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate, 
         selectedSchedule = schedule
         tableViewButtons.reloadSections(IndexSet(integer: 0), with: .automatic)
         tableViewButtons.separatorStyle = .singleLine
-        if selectedSchedule != nil {
-            enableButtonWithCond()
-        } else {
-            disableButton()
-        }
+        enableButtonWithCond()
     }
     
-    func selectCategory(categoryTitle: String){
+    func selectCategory(categoryTitle: String) {
         selectedCategory = categoryTitle
         tableViewButtons.reloadSections(IndexSet(integer: 0), with: .automatic)
-        
         enableButtonWithCond()
     }
     
@@ -91,7 +86,7 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate, 
         view.addSubview(tableViewButtons)
         
         let titleLabel = UILabel()
-        titleLabel.text = "Новая привычка"
+        titleLabel.text = "Новое нерегулярное событие"
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         titleLabel.textColor = .black
@@ -168,7 +163,7 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate, 
             tableViewTopConstraint,
             tableViewButtons.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             tableViewButtons.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            tableViewButtons.heightAnchor.constraint(equalToConstant: 150),
+            tableViewButtons.heightAnchor.constraint(equalToConstant: 75),
             
             footerButtonsStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             footerButtonsStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -180,8 +175,7 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate, 
     private func enableButtonWithCond() {
         if  textField.text != "" &&
             textField.text != nil &&
-            selectedCategory != nil &&
-                selectedSchedule != nil {
+            selectedCategory != nil {
             createButton.backgroundColor = .black
             createButton.isEnabled = true
         }
@@ -196,7 +190,7 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate, 
         let additionalSpacing: CGFloat = isVisible ? 32 : 0
         tableViewTopConstraint.constant = additionalSpacing
         UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded() 
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -221,8 +215,7 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate, 
     @objc
     private func createButtonDidTap() {
         guard let text = textField.text,
-        let color = UIColor(named: "YPBlue"),
-        let selectedSchedule else { return }
+        let color = UIColor(named: "YPBlue") else { return }
         
         let newTracker = Tracker(id: UUID(), name: text, color: color, emoji: "🏂🏻", schedule: selectedSchedule)
         addTracker(tracker: newTracker, toCategory: selectedCategory ?? "")
@@ -237,49 +230,39 @@ final class HabitCreatingViewController: UIViewController, UITextFieldDelegate, 
 }
 
 // MARK: - Extensions
-extension HabitCreatingViewController: UITableViewDelegate, UITableViewDataSource {
+extension IrregularEventCreatingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         1
     }
     
-    func tableView(_ tableView: UITableView, 
+    func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        2
+        1
     }
     
-    func tableView(_ tableView: UITableView, 
+    func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: HabitCreatingCell.identifier,
                                                        for: indexPath) as? HabitCreatingCell else { return UITableViewCell()}
         cell.backgroundColor = UIColor(named: "BackGroundFields")
         cell.accessoryType = .disclosureIndicator
         cell.selectionStyle = .none
-        let mainText = indexPath.row == 0 ? "Категория" : "Расписание"
-        let subText = indexPath.row == 0 ? selectedCategory : selectedSchedule?.toString()
+        let mainText = "Категория"
+        let subText = selectedCategory
         cell.configure(mainText: mainText, subText: subText)
         return cell
         
     }
     
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 {
-         tableView.deselectRow(at: indexPath, animated: false)
-            
-            let selectCategoryViewController = SelectCategoryViewController()
-            selectCategoryViewController.delegateCreatingView = self
-            selectCategoryViewController.delegateTrackersView = delegate
-            self.present(selectCategoryViewController, animated: true)
-            
-        } else {
-            tableView.deselectRow(at: indexPath, animated: false)
-            let selectScheduleViewController = SelectScheduleViewController()
-            selectScheduleViewController.delegate = self
-            self.present(selectScheduleViewController, animated: true)
-        }
+        tableView.deselectRow(at: indexPath, animated: false)
+
+        let selectCategoryViewController = SelectCategoryViewController()
+        selectCategoryViewController.delegateCreatingView = self
+        selectCategoryViewController.delegateTrackersView = delegate
+        self.present(selectCategoryViewController, animated: true)
     }
-    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75

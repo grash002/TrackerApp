@@ -8,6 +8,7 @@ enum WeekDay: Int, Comparable {
     case friday
     case saturday
     case sunday
+    case eternity
     
     static func < (lhs: WeekDay, rhs: WeekDay) -> Bool {
         lhs.rawValue < rhs.rawValue

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		EE23FCB22D3EA65000495FF7 /* CompletedTrackers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE23FCB12D3EA65000495FF7 /* CompletedTrackers.swift */; };
+		EE23FCB42D40161900495FF7 /* IrregularEventCreatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE23FCB32D40161900495FF7 /* IrregularEventCreatingViewController.swift */; };
+		EE23FCB62D40E0CD00495FF7 /* CreatingViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE23FCB52D40E0CD00495FF7 /* CreatingViewControllerProtocol.swift */; };
 		EE3055872D1AAB5800F696AB /* TrackerCreatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3055862D1AAB5800F696AB /* TrackerCreatingViewController.swift */; };
 		EE3055892D1ABCFC00F696AB /* HabitCreatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3055882D1ABCFC00F696AB /* HabitCreatingViewController.swift */; };
 		EE9ED80D2CFE4DC100E9AB10 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9ED80C2CFE4DC100E9AB10 /* AppDelegate.swift */; };
@@ -34,6 +36,8 @@
 
 /* Begin PBXFileReference section */
 		EE23FCB12D3EA65000495FF7 /* CompletedTrackers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTrackers.swift; sourceTree = "<group>"; };
+		EE23FCB32D40161900495FF7 /* IrregularEventCreatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IrregularEventCreatingViewController.swift; sourceTree = "<group>"; };
+		EE23FCB52D40E0CD00495FF7 /* CreatingViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatingViewControllerProtocol.swift; sourceTree = "<group>"; };
 		EE3055862D1AAB5800F696AB /* TrackerCreatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCreatingViewController.swift; sourceTree = "<group>"; };
 		EE3055882D1ABCFC00F696AB /* HabitCreatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCreatingViewController.swift; sourceTree = "<group>"; };
 		EE9ED8092CFE4DC100E9AB10 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,6 +116,7 @@
 				EEDD9D892D39A1CD00F25189 /* WeekDay.swift */,
 				EEDD9D8B2D39A2DE00F25189 /* Schedule.swift */,
 				EE23FCB12D3EA65000495FF7 /* CompletedTrackers.swift */,
+				EE23FCB52D40E0CD00495FF7 /* CreatingViewControllerProtocol.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -124,6 +129,7 @@
 				EE9ED8562D08D02500E9AB10 /* StatisticViewController.swift */,
 				EE3055862D1AAB5800F696AB /* TrackerCreatingViewController.swift */,
 				EE3055882D1ABCFC00F696AB /* HabitCreatingViewController.swift */,
+				EE23FCB32D40161900495FF7 /* IrregularEventCreatingViewController.swift */,
 				EEFBC39E2D38424700CC996E /* SelectCategoryViewController.swift */,
 				EEBADD152D38590C000147DA /* CategoryCreatingViewController.swift */,
 				EEDD9D872D399BC800F25189 /* SelectScheduleViewController.swift */,
@@ -218,6 +224,7 @@
 				EE9ED84F2D08A7E900E9AB10 /* TrackerCategory.swift in Sources */,
 				EE9ED8512D08A82B00E9AB10 /* TrackerRecord.swift in Sources */,
 				EE9ED8112CFE4DC100E9AB10 /* TrackersViewController.swift in Sources */,
+				EE23FCB62D40E0CD00495FF7 /* CreatingViewControllerProtocol.swift in Sources */,
 				EEF2E5462D1466240092C8A9 /* TrackerHeaderCell.swift in Sources */,
 				EEBADD182D396655000147DA /* HabitCreatingCell.swift in Sources */,
 				EEDD9D882D399BC800F25189 /* SelectScheduleViewController.swift in Sources */,
@@ -225,6 +232,7 @@
 				EE23FCB22D3EA65000495FF7 /* CompletedTrackers.swift in Sources */,
 				EEF2E5442D1355590092C8A9 /* TrackerCell.swift in Sources */,
 				EEBADD162D38590C000147DA /* CategoryCreatingViewController.swift in Sources */,
+				EE23FCB42D40161900495FF7 /* IrregularEventCreatingViewController.swift in Sources */,
 				EEDD9D8A2D39A1CD00F25189 /* WeekDay.swift in Sources */,
 				EE9ED84D2D08A76D00E9AB10 /* Tracker.swift in Sources */,
 				EEDD9D8E2D39A76400F25189 /* ScheduleCell.swift in Sources */,

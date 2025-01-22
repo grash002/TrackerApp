@@ -29,6 +29,6 @@ struct Schedule {
     func isSelected(selectedDate: Date) -> Bool {
         var weekDay = calendar.component(.weekday, from: selectedDate)
         weekDay = weekDay == 1 ? 6 : weekDay - 2
-        return days.contains(where: {$0.rawValue == weekDay} )
+        return days.contains(where: {$0.rawValue == weekDay || $0 == .eternity} )
     }
 }

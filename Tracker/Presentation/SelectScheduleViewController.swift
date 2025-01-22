@@ -2,7 +2,7 @@ import UIKit
 
 final class SelectScheduleViewController: UIViewController {
     // MARK: - Public Properties
-    var delegate: HabitCreatingViewController?
+    var delegate: CreatingViewControllerProtocol?
 
     // MARK: - Private Properties
     private let tableViewSchedule = UITableView()
@@ -21,13 +21,13 @@ final class SelectScheduleViewController: UIViewController {
     private func setView() {
         view.backgroundColor = .white
         
-        let titlelLabel = UILabel()
-        titlelLabel.text = "Расписание"
-        titlelLabel.textAlignment = .center
-        titlelLabel.font = UIFont.systemFont(ofSize: 16)
-        titlelLabel.textColor = .black
-        titlelLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(titlelLabel)
+        let titleLabel = UILabel()
+        titleLabel.text = "Расписание"
+        titleLabel.textAlignment = .center
+        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        titleLabel.textColor = .black
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleLabel)
         
         tableViewSchedule.dataSource = self
         tableViewSchedule.delegate = self
@@ -45,7 +45,7 @@ final class SelectScheduleViewController: UIViewController {
         
         createButton.setTitle("Готово", for: .normal)
         createButton.layer.cornerRadius = 16
-        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.tintColor = .white
         createButton.backgroundColor = .black
         createButton.addTarget(self,
@@ -55,10 +55,10 @@ final class SelectScheduleViewController: UIViewController {
         view.addSubview(createButton)
         
         NSLayoutConstraint.activate([
-            titlelLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
-            titlelLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            titlelLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            tableViewSchedule.topAnchor.constraint(equalTo: titlelLabel.bottomAnchor, constant: 24),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
+            titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableViewSchedule.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
             tableViewSchedule.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
             tableViewSchedule.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
             tableViewSchedule.heightAnchor.constraint(equalToConstant: CGFloat(totalRows * 75)),

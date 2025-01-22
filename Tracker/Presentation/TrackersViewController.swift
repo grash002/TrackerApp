@@ -37,6 +37,7 @@ final class TrackersViewController: UIViewController {
     private var calendar = Calendar.current
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
+        titleLabel.textColor = .black
         titleLabel.text = "Трекеры"
         titleLabel.font = UIFont.boldSystemFont(ofSize: 34)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -84,7 +85,8 @@ final class TrackersViewController: UIViewController {
     private lazy var labelNoTrackers: UILabel = {
         let label = UILabel()
         label.text = "Что будем отслеживать?"
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return label
     }()
     
@@ -117,6 +119,10 @@ final class TrackersViewController: UIViewController {
         
         dateChanged(datePicker)
         setView()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
     
     //MARK: - Public Methods
@@ -235,11 +241,11 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         let item = selectedCategories[indexPath.section].trackers[indexPath.item]
         
         var isDidTap = false
-        var coundDays = 0
+        var countDays = 0
         
         if let indexTracker = completedTrackers.firstIndex(where: {$0.trackedId == item.id }) {
             isDidTap = completedTrackers[indexTracker].dates.contains(pickedDate)
-            coundDays = completedTrackers[indexTracker].dates.count
+            countDays = completedTrackers[indexTracker].dates.count
         }
         
         let isDisableAddButton = pickedDate > calendar.startOfDay(for: Date()).addingTimeInterval(TimeInterval(calendar.timeZone.secondsFromGMT()))
@@ -249,7 +255,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
                        emoji: item.emoji,
                        color: item.color,
                        isDidTap: isDidTap,
-                       count: coundDays,
+                       count: countDays,
                        isDisableAddButton: isDisableAddButton)
         {[weak self] addButtonDidTapFlag in
             guard let self else { return }

@@ -19,7 +19,7 @@ final class TrackerCell: UICollectionViewCell {
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = .white
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -44,7 +44,7 @@ final class TrackerCell: UICollectionViewCell {
     private var addButtonDidTapFlag = false
     lazy var daysLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = .black
         label.text = "0 дней"
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -74,7 +74,7 @@ final class TrackerCell: UICollectionViewCell {
             viewCardTracker.heightAnchor.constraint(equalToConstant: 90),
             
             emojiLabel.topAnchor.constraint(equalTo: viewCardTracker.topAnchor, constant: 12),
-            emojiLabel.trailingAnchor.constraint(equalTo: viewCardTracker.trailingAnchor, constant: -12),
+            emojiLabel.leadingAnchor.constraint(equalTo: viewCardTracker.leadingAnchor, constant: 12),
             emojiLabel.heightAnchor.constraint(equalToConstant: 24),
             emojiLabel.widthAnchor.constraint(equalToConstant: 24),
             
@@ -84,11 +84,11 @@ final class TrackerCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(lessThanOrEqualTo: emojiLabel.bottomAnchor),
             
             daysLabel.topAnchor.constraint(equalTo: viewCardTracker.bottomAnchor, constant: 8),
-            daysLabel.leadingAnchor.constraint(equalTo: addButton.trailingAnchor, constant: 8),
-            daysLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
-            daysLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            daysLabel.trailingAnchor.constraint(equalTo: addButton.leadingAnchor, constant: -8),
+            daysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            daysLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24),
             
-            addButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             addButton.widthAnchor.constraint(equalToConstant: 34),
             addButton.heightAnchor.constraint(equalToConstant: 34),
             addButton.centerYAnchor.constraint(equalTo: daysLabel.centerYAnchor)
