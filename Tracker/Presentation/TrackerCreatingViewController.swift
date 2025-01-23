@@ -2,28 +2,30 @@ import UIKit
 
 final class TrackerCreatingViewController: UIViewController {
     
-    var delegate: TrackersViewController?
-    
+    // MARK: - Public Properties
+    weak var delegate: TrackersViewController?
+
+    // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setView()
     }
     
+    // MARK: - Private Methods
     private func setView() {
         view.backgroundColor = .white
         
-        let titlelLabel = UILabel()
-        titlelLabel.text = "Создание трекера"
-        titlelLabel.textAlignment = .center
-        titlelLabel.font = UIFont.systemFont(ofSize: 16)
-        titlelLabel.textColor = .black
-        titlelLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(titlelLabel)
+        let titleLabel = UILabel()
+        titleLabel.text = "Создание трекера"
+        titleLabel.textAlignment = .center
+        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        titleLabel.textColor = .black
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleLabel)
         
         let habitCreateButton = UIButton(type: .custom)
         habitCreateButton.setTitle("Привычка", for: .normal)
-        habitCreateButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        habitCreateButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         habitCreateButton.titleLabel?.textColor = .white
         habitCreateButton.backgroundColor = .black
         habitCreateButton.layer.cornerRadius = 16
@@ -34,10 +36,13 @@ final class TrackerCreatingViewController: UIViewController {
         
         let irregularEventButton = UIButton(type: .custom)
         irregularEventButton.setTitle("Нерегулярные событие", for: .normal)
-        irregularEventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        irregularEventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         irregularEventButton.titleLabel?.textColor = .white
         irregularEventButton.backgroundColor = .black
         irregularEventButton.layer.cornerRadius = 16
+        irregularEventButton.addTarget(self,
+                                    action: #selector(irregularCreateButtonDidTap),
+                                    for: .touchUpInside)
         irregularEventButton.translatesAutoresizingMaskIntoConstraints = false
         
         let stackButtons = UIStackView(arrangedSubviews: [
@@ -51,9 +56,9 @@ final class TrackerCreatingViewController: UIViewController {
         view.addSubview(stackButtons)
         
         NSLayoutConstraint.activate([
-            titlelLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
-            titlelLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            titlelLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
+            titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             
             stackButtons.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             stackButtons.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
@@ -68,11 +73,20 @@ final class TrackerCreatingViewController: UIViewController {
     }
     
     @objc
-    func habitCreateButtonDidTap() {
+    private func habitCreateButtonDidTap() {
         self.dismiss(animated: true)
         let habitCreatingViewController = HabitCreatingViewController()
         habitCreatingViewController.delegate = delegate
         delegate?.present(habitCreatingViewController,
+                     animated: true)
+    }
+    
+    @objc
+    private func irregularCreateButtonDidTap() {
+        self.dismiss(animated: true)
+        let irregularEventCreatingViewController = IrregularEventCreatingViewController()
+        irregularEventCreatingViewController.delegate = delegate
+        delegate?.present(irregularEventCreatingViewController,
                      animated: true)
     }
 }

@@ -1,6 +1,8 @@
 import UIKit
 
 final class TrackerHeaderCell: UICollectionReusableView {
+    
+    // MARK: - Public Properties
     static let identifier = "TrackerHeaderCell"
     
     let titleLabel: UILabel = {
@@ -11,6 +13,7 @@ final class TrackerHeaderCell: UICollectionReusableView {
         return label
     }()
     
+    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         
