@@ -4,6 +4,7 @@
         <attribute name="categoryName" optional="YES" attributeType="String"/>
         <attribute name="idTrackerCategory" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="idTrackers" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="Array&lt;String&gt;"/>
+        <relationship name="tracker" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackerCoreData"/>
     </entity>
     <entity name="TrackerCoreData" representedClassName=".TrackerCoreData" syncable="YES" codeGenerationType="class">
         <attribute name="colorHex" optional="YES" attributeType="String"/>
@@ -11,9 +12,12 @@
         <attribute name="idTracker" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="schedule" optional="YES" attributeType="String"/>
         <attribute name="trackerName" optional="YES" attributeType="String"/>
+        <relationship name="trackercategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackerCoreData" inverseName="trackercategory" inverseEntity="TrackerCoreData"/>
+        <relationship name="trackerrecord" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackerRecordCoreData" inverseName="tracker" inverseEntity="TrackerRecordCoreData"/>
     </entity>
     <entity name="TrackerRecordCoreData" representedClassName="TrackerRecordCoreData" syncable="YES" codeGenerationType="class">
         <attribute name="idTracker" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="trackingDates" optional="YES" attributeType="Transformable" customClassName="Array&lt;Date&gt;"/>
+        <relationship name="tracker" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackerCoreData" inverseName="trackerrecord" inverseEntity="TrackerCoreData"/>
     </entity>
 </model>

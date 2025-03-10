@@ -3,10 +3,8 @@ import UIKit
 class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingViewControllerProtocol {
     // MARK: - Public Properties
     weak var delegate: TrackersViewController?
-    var tableViewButtonsHeight = CGFloat(150)
-    let scrollView = UIScrollView()
+    var tableViewButtonsHeight: CGFloat = 150
     var selectedSchedule: Schedule?
-    var selectedCategory: String?
     lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.textAlignment = .center
@@ -19,6 +17,8 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
     
 
     // MARK: - Private Properties
+    private let scrollView = UIScrollView()
+    private var selectedCategory: String?
     private let trackerCategoryStore = TrackerCategoryStore.shared
     private let textField = UITextField()
     private let tableViewButtons = UITableView()
@@ -27,9 +27,11 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
     private let warningLabel = UILabel()
     private let characterLimit = 38
     private let contentView = UIView()
-    private var tableViewTopConstraint: NSLayoutConstraint!
     private var selectedEmoji: String?
     private var selectedColor: String?
+    private lazy var tableViewTopConstraint: NSLayoutConstraint = {
+        tableViewButtons.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 0)
+    }()
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 50, height: 50)
@@ -65,7 +67,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
         guard let delegate else { return }
         
         if let existingCategory = delegate.categories.first(where: { $0.title == toCategory }) {
-            trackerCategoryStore.addTrackersCategory(idCategory: existingCategory.idTrackerCategory, tracker: tracker)
+            trackerCategoryStore.addTrackersCategory(idCategory: existingCategory.id, tracker: tracker)
             delegate.refreshTrackersConstraints()
             
         } else {
@@ -227,11 +229,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
             footerButtonsStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             footerButtonsStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             footerButtonsStack.heightAnchor.constraint(equalToConstant: 60),
-            
-            
-
         ])
-
     }
     
     private func enableButtonWithCond() {
@@ -284,15 +282,15 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
         let selectedEmoji,
         let selectedColor else { return }
         
-        let newTracker = Tracker(id: UUID(), name: text, color: selectedColor, emoji: selectedEmoji, schedule: selectedSchedule)
+        let newTracker = Tracker(id: UUID(), name: text, colorHex: selectedColor, emoji: selectedEmoji, schedule: selectedSchedule)
         addTracker(tracker: newTracker, toCategory: selectedCategory ?? "")
         
-        self.dismiss(animated: true)
+        dismiss(animated: true)
     }
     
     @objc
     private func dismissButtonDidTap() {
-        self.dismiss(animated: true)
+        dismiss(animated: true)
     }
 }
 
@@ -330,16 +328,15 @@ extension CreatingViewController: UITableViewDelegate, UITableViewDataSource {
             let selectCategoryViewController = SelectCategoryViewController()
             selectCategoryViewController.delegateCreatingView = self
             selectCategoryViewController.delegateTrackersView = delegate
-            self.present(selectCategoryViewController, animated: true)
+            present(selectCategoryViewController, animated: true)
             
         } else {
             tableView.deselectRow(at: indexPath, animated: false)
             let selectScheduleViewController = SelectScheduleViewController()
             selectScheduleViewController.delegate = self
-            self.present(selectScheduleViewController, animated: true)
+            present(selectScheduleViewController, animated: true)
         }
     }
-    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
@@ -367,11 +364,7 @@ extension CreatingViewController : UICollectionViewDelegate, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        
-        let edgeInsets = section == 0 ?
-        UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0) :
-        UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        return edgeInsets
+        UIEdgeInsets(top: 0, left: 0, bottom: section == 0 ? 40 : 0, right: 0)
     }
     
     func collectionView(_ collectionView: UICollectionView,

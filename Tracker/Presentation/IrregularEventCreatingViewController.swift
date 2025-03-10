@@ -6,7 +6,7 @@ final class IrregularEventCreatingViewController: CreatingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         selectedSchedule = Schedule(days: [.eternity])
-        tableViewButtonsHeight = CGFloat(75)
+        tableViewButtonsHeight = 75
         titleLabel.text = "Новое нерегулярное событие"
         setView()
     }

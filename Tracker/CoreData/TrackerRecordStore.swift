@@ -1,30 +1,49 @@
 import CoreData
 import UIKit
 
-final class TrackerRecordStore {
+final class TrackerRecordStore: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: - Public Properties
     static let shared = TrackerRecordStore()
- 
+    weak var delegate: TrackerRecordStoreDelegate?
+
     // MARK: - Private Properties
-    private let appDelegate = UIApplication.shared.delegate as? AppDelegate
-    private let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
+    private let dataBaseStore = DataBaseStore.shared
+    private let context = DataBaseStore.shared.persistentContainer.viewContext
     private let calendar = Calendar.current
+    private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>?
     
     // MARK: - Initializers
-    private init() { }
+    private override init() {
+        super.init()
+        setupFetchedResultsController()
+    }
+    
+    // MARK: - Private Methods
+    private func setupFetchedResultsController() {
+        let request: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "idTracker", ascending: true)]
+        
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: context,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        fetchedResultsController?.delegate = self
+        
+        do {
+            try fetchedResultsController?.performFetch()
+        } catch {
+            print("Ошибка при загрузке данных: \(error.localizedDescription)")
+        }
+    }
     
     // MARK: - Public Methods
     func createTrackerRecord(trackerId: UUID, trackingDate: Date) {
-        guard   let context,
-                let appDelegate else { return }
-        
-        let request = TrackerRecordCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "idTracker == %@", trackerId as CVarArg)
-        
-        if let result = try? context.fetch(request).first {
+        if let result = fetchedResultsController?.fetchedObjects?.first(where: { $0.idTracker == trackerId }) {
             if var trackingDates = result.trackingDates,
-               !trackingDates.contains(where: { calendar.isDate($0, inSameDayAs: trackingDate)}) {
+               !trackingDates.contains(where: { calendar.isDate($0, inSameDayAs: trackingDate) }) {
                 trackingDates.append(trackingDate)
                 result.trackingDates = trackingDates
             } else {
@@ -35,46 +54,28 @@ final class TrackerRecordStore {
             trackerRecordCoreData.idTracker = trackerId
             trackerRecordCoreData.trackingDates = [trackingDate]
         }
-        
-        
-        appDelegate.saveContext()
+        dataBaseStore.saveContext()
     }
     
     func deleteTrackerRecord(trackerId: UUID, trackingDate: Date) {
-        guard   let context,
-                let appDelegate else { return }
-        let request = TrackerRecordCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "idTracker == %@", trackerId as CVarArg)
-        
-        if let result = try? context.fetch(request).first,
+        if let result = fetchedResultsController?.fetchedObjects?.first(where: { $0.idTracker == trackerId }),
            var dates = result.trackingDates {
             dates.removeAll { calendar.isDate($0, inSameDayAs: trackingDate) }
             result.trackingDates = dates
-            appDelegate.saveContext()
+            dataBaseStore.saveContext()
         }
     }
     
     func fetchTrackerRecords() -> [CompletedTrackers] {
-        let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
-        var fetchedTrackerRecords: [CompletedTrackers] = []
-        
-        do {
-            let results = try context?.fetch(request)
-            results?.forEach({ item in
-                if let idTracker = item.idTracker{
-                    if let trackingDates = item.trackingDates {
-                        fetchedTrackerRecords.append(CompletedTrackers(trackedId: idTracker,
-                                                                       dates: trackingDates))
-                    } else {
-                        fetchedTrackerRecords.append(CompletedTrackers(trackedId: idTracker,
-                                                                           dates: []))
-                    }
-                }
-            })
-        } catch {
-            print("Fetch error TrackerRecordCoreData: \(error.localizedDescription)")
-        }
-        
-        return fetchedTrackerRecords
+        return fetchedResultsController?.fetchedObjects?.compactMap { item in
+            guard let idTracker = item.idTracker else { return nil }
+            let trackingDates = item.trackingDates ?? []
+            return CompletedTrackers(trackedId: idTracker, dates: trackingDates)
+        } ?? []
+    }
+    
+    // MARK: - NSFetchedResultsControllerDelegate
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        delegate?.storeTrackerRecord()
     }
 }
