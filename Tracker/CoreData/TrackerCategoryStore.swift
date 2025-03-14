@@ -6,6 +6,7 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - Public Properties
     static let shared = TrackerCategoryStore()
     weak var delegate: TrackerCategoryStoreDelegate?
+    var categories: [TrackerCategory]?
 
     // MARK: - Private Properties
     private let trackerStore = TrackerStore.shared
@@ -16,14 +17,37 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - Initializers
     private override init() {
         super.init()
+        
         setupFetchedResultsController()
+        categories = fetchTrackersCategory()
     }
     
     // MARK: - Public Methods
+    func updateTrackersCategory(tracker: Tracker?, idCategory: UUID, categoryName: String?) {
+        if var categories,
+            let tracker,
+            let index = categories.firstIndex(where: {$0.id == idCategory}),
+           !categories[index].trackers.contains(where: {$0.id == tracker.id}){
+            categories[index].trackers.append(tracker)
+            self.categories = categories
+        }
+        
+        if var categories,
+           let categoryName,
+           !categories.contains(where: {$0.id == idCategory}) {
+            categories.append(TrackerCategory(id: idCategory, title: categoryName, trackers: []))
+            self.categories = categories
+        }
+    }
+    
     func addTrackersCategory(
         idCategory: UUID,
         tracker: Tracker
     ) {
+        updateTrackersCategory(tracker: tracker,
+                               idCategory: idCategory,
+                               categoryName: nil)
+        
         let request = TrackerCategoryCoreData.fetchRequest()
         request.predicate = NSPredicate(
             format: "idTrackerCategory == %@",
@@ -46,6 +70,10 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
         idCategory: UUID,
         categoryName: String
     ) {
+        updateTrackersCategory(tracker: nil,
+                               idCategory: idCategory,
+                               categoryName: categoryName)
+
         
         let request = TrackerCategoryCoreData.fetchRequest()
         request.predicate = NSPredicate(

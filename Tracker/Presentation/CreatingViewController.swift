@@ -83,7 +83,6 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
         guard let delegate else { return }
         if !delegate.categories.contains(where: {$0.title.uppercased() == toCategory.uppercased()}) {
             trackerCategoryStore.createTrackerCategory(idCategory: UUID(), categoryName: toCategory)
-            print(delegate.categories)
         }
     }
     

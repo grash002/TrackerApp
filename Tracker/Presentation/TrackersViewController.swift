@@ -4,9 +4,9 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Public Properties
     
-    lazy var categories: [TrackerCategory] = {
-        trackerCategoryStore.fetchTrackersCategory()
-    }()
+    var categories: [TrackerCategory] {
+        trackerCategoryStore.categories ?? []
+    }
     
     // MARK: - Private Properties
     private let formatter = DateFormatter()
@@ -305,7 +305,6 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 
 extension TrackersViewController: TrackerCategoryStoreDelegate {
     func storeTrackerCategory() {
-        categories = trackerCategoryStore.fetchTrackersCategory()
         refreshTrackersConstraints()
     }
 }
