@@ -18,9 +18,9 @@ final class TabBarController: UITabBarController {
         let topBorder = CALayer()
         topBorder.backgroundColor = UIColor.lightGray.cgColor
         topBorder.frame = CGRect(x: 0, y: 0, width: tabBar.bounds.width, height: 1)
-        self.tabBar.layer.addSublayer(topBorder)
+        tabBar.layer.addSublayer(topBorder)
         
-        self.viewControllers = [trackersViewController,statisticViewController]
+        viewControllers = [trackersViewController,statisticViewController]
     }
 }
 

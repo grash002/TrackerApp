@@ -3,22 +3,31 @@ import UIKit
 final class TrackersViewController: UIViewController {
     
     // MARK: - Public Properties
-    let formatter = DateFormatter()
-    let datePicker = UIDatePicker()
-    var categories: [TrackerCategory] = []
-    var selectedCategories: [TrackerCategory] = []
-    var completedTrackers: [CompletedTrackers] = []
-    var pickedDate: Date {
-        calendar.startOfDay(for: datePicker.date).addingTimeInterval(TimeInterval(calendar.timeZone.secondsFromGMT()))
+    
+    var categories: [TrackerCategory] {
+        trackerCategoryStore.categories ?? []
     }
     
-    lazy var collectionView: UICollectionView = {
+    // MARK: - Private Properties
+    private let formatter = DateFormatter()
+    private let datePicker = UIDatePicker()
+    private let trackerCategoryStore = TrackerCategoryStore.shared
+    private let trackerRecordStore = TrackerRecordStore.shared
+    private var selectedCategories: [TrackerCategory] = []
+    lazy private var completedTrackers: [CompletedTrackers] = {
+        trackerRecordStore.fetchTrackerRecords()
+    }()
+    private var pickedDate: Date {
+        calendar.startOfDay(for: datePicker.date).addingTimeInterval(TimeInterval(calendar.timeZone.secondsFromGMT()))
+    }
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         layout.minimumInteritemSpacing = 9
         layout.minimumLineSpacing = 10
         
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView.allowsSelection = true
         collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: TrackerCell.identifier)
         collectionView.register(TrackerHeaderCell.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -32,8 +41,6 @@ final class TrackersViewController: UIViewController {
         collectionView.reloadData()
         return collectionView
     }()
-    
-    // MARK: - Private Properties
     private var calendar = Calendar.current
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
@@ -106,16 +113,8 @@ final class TrackersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Mock Data
-        let mockSchedule = Schedule(days: [.monday])
-        categories.append(TrackerCategory(title: "Домашний уют", trackers: [
-            Tracker(id: UUID(), name: "Поливать растения", color: .green, emoji: "❤️", schedule: mockSchedule),
-        ]))
-        categories.append(TrackerCategory(title: "Радостные мелочи", trackers: [
-            Tracker(id: UUID(), name: "Кошка заслонила камеру на созвоне", color: .orange, emoji: "😸", schedule: Schedule(days: [.friday])),
-            Tracker(id: UUID(), name: "Бабушка прислала открытку в вотсапе", color: .red, emoji: "🌸", schedule: mockSchedule),
-            Tracker(id: UUID(), name: "Бабушка прислала открытку в вотсапе", color: .magenta, emoji: "🌸", schedule: mockSchedule),
-        ]))
+        trackerCategoryStore.delegate = self
+        trackerRecordStore.delegate = self
         
         dateChanged(datePicker)
         setView()
@@ -147,7 +146,7 @@ final class TrackersViewController: UIViewController {
             var flagCategories = true
             selectedCategories.forEach({ flagCategories = flagCategories && $0.trackers.isEmpty })
             
-            if (selectedCategories.isEmpty || flagCategories){
+            if selectedCategories.isEmpty || flagCategories {
                 NSLayoutConstraint.activate(noTrackerConstraints)
                 NSLayoutConstraint.deactivate(trackerConstraints)
                 collectionView.isHidden = true
@@ -249,28 +248,19 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         }
         
         let isDisableAddButton = pickedDate > calendar.startOfDay(for: Date()).addingTimeInterval(TimeInterval(calendar.timeZone.secondsFromGMT()))
-       
         
         cell.configure(nameTracker: item.name,
                        emoji: item.emoji,
-                       color: item.color,
+                       color: UIColor(hex: item.colorHex),
                        isDidTap: isDidTap,
                        count: countDays,
                        isDisableAddButton: isDisableAddButton)
         {[weak self] addButtonDidTapFlag in
             guard let self else { return }
             if !addButtonDidTapFlag {
-                if let index = self.completedTrackers.firstIndex(where: {$0.trackedId == item.id}),
-                   !self.completedTrackers[index].dates.contains(where: {$0 == self.pickedDate}){
-                    self.completedTrackers[index].dates.append(self.pickedDate)
-                } else {
-                    self.completedTrackers.append(CompletedTrackers(trackedId: item.id, dates: [self.pickedDate]))
-                }
+                trackerRecordStore.createTrackerRecord(trackerId: item.id, trackingDate: pickedDate)
             } else {
-                if let indexTracker = self.completedTrackers.firstIndex(where: {$0.trackedId == item.id}),
-                   let indexDate = self.completedTrackers[indexTracker].dates.firstIndex(where: {$0 == self.pickedDate}){
-                    self.completedTrackers[indexTracker].dates.remove(at: indexDate)
-                }
+                trackerRecordStore.deleteTrackerRecord(trackerId: item.id, trackingDate: pickedDate)
             }
             self.collectionView.reloadData()
         }
@@ -310,5 +300,17 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 40)
+    }
+}
+
+extension TrackersViewController: TrackerCategoryStoreDelegate {
+    func storeTrackerCategory() {
+        refreshTrackersConstraints()
+    }
+}
+
+extension TrackersViewController: TrackerRecordStoreDelegate {
+    func storeTrackerRecord() {
+        completedTrackers = trackerRecordStore.fetchTrackerRecords()
     }
 }

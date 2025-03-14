@@ -162,7 +162,6 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
         delegateTrackersView?.categories.count ?? 0
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
