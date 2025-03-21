@@ -42,8 +42,7 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
     
     func addTrackersCategory(
         idCategory: UUID,
-        tracker: Tracker
-    ) {
+        tracker: Tracker) {
         updateTrackersCategory(tracker: tracker,
                                idCategory: idCategory,
                                categoryName: nil)

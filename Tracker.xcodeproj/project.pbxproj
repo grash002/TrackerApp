@@ -39,6 +39,7 @@
 		EEDD9D8A2D39A1CD00F25189 /* WeekDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD9D892D39A1CD00F25189 /* WeekDay.swift */; };
 		EEDD9D8C2D39A2DE00F25189 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD9D8B2D39A2DE00F25189 /* Schedule.swift */; };
 		EEDD9D8E2D39A76400F25189 /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDD9D8D2D39A76400F25189 /* ScheduleCell.swift */; };
+		EEE7A5032D8A0BA20030D850 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE7A5022D8A0BA20030D850 /* OnboardingViewController.swift */; };
 		EEF2E5442D1355590092C8A9 /* TrackerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF2E5432D1355590092C8A9 /* TrackerCell.swift */; };
 		EEF2E5462D1466240092C8A9 /* TrackerHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF2E5452D1466240092C8A9 /* TrackerHeaderCell.swift */; };
 		EEFBC39F2D38424800CC996E /* SelectCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFBC39E2D38424700CC996E /* SelectCategoryViewController.swift */; };
@@ -79,6 +80,7 @@
 		EEDD9D892D39A1CD00F25189 /* WeekDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDay.swift; sourceTree = "<group>"; };
 		EEDD9D8B2D39A2DE00F25189 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		EEDD9D8D2D39A76400F25189 /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
+		EEE7A5022D8A0BA20030D850 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		EEF2E5432D1355590092C8A9 /* TrackerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCell.swift; sourceTree = "<group>"; };
 		EEF2E5452D1466240092C8A9 /* TrackerHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerHeaderCell.swift; sourceTree = "<group>"; };
 		EEFBC39E2D38424700CC996E /* SelectCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCategoryViewController.swift; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 				EEBADD152D38590C000147DA /* CategoryCreatingViewController.swift */,
 				EEDD9D872D399BC800F25189 /* SelectScheduleViewController.swift */,
 				EEB194A12D68D95B00131A33 /* CreatingViewController.swift */,
+				EEE7A5022D8A0BA20030D850 /* OnboardingViewController.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				EE9ED8172CFE4DC100E9AB10 /* Tracker.xcdatamodeld in Sources */,
 				EE23FCC22D43D51000495FF7 /* CreatingEmojiColorHeaderCell.swift in Sources */,
 				EE9ED8552D08CF5900E9AB10 /* TabBarController.swift in Sources */,
+				EEE7A5032D8A0BA20030D850 /* OnboardingViewController.swift in Sources */,
 				EEFBC39F2D38424800CC996E /* SelectCategoryViewController.swift in Sources */,
 				EE9ED84F2D08A7E900E9AB10 /* TrackerCategory.swift in Sources */,
 				EE23FCC42D43D7DA00495FF7 /* CreatingEmojiColorCell.swift in Sources */,

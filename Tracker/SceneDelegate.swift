@@ -1,6 +1,6 @@
 import UIKit
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
@@ -9,7 +9,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        window?.rootViewController = TabBarController()
+        window?.rootViewController = OnboardingViewController()//TabBarController()
         window?.makeKeyAndVisible()
     }
 
