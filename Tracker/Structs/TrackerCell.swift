@@ -113,7 +113,10 @@ final class TrackerCell: UICollectionViewCell {
         addButton.backgroundColor = color
         saveCountDays = closure
         countDays = count
-        daysLabel.text = dateText(from: countDays)
+        daysLabel.text = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: "Number of tracking days"),
+            countDays
+        )
         addButtonDidTapFlag = isDidTap
         
         if addButtonDidTapFlag {

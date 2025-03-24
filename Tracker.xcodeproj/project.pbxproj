@@ -19,6 +19,8 @@
 		EE3055872D1AAB5800F696AB /* TrackerCreatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3055862D1AAB5800F696AB /* TrackerCreatingViewController.swift */; };
 		EE3055892D1ABCFC00F696AB /* HabitCreatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3055882D1ABCFC00F696AB /* HabitCreatingViewController.swift */; };
 		EE88E60C2D91953400315399 /* TrackersViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE88E60B2D91953400315399 /* TrackersViewControllerProtocol.swift */; };
+		EE88E60F2D91ACA500315399 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EE88E60D2D91ACA500315399 /* Localizable.strings */; };
+		EE88E6122D91ACC700315399 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = EE88E6102D91ACC700315399 /* Localizable.stringsdict */; };
 		EE9ED80D2CFE4DC100E9AB10 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9ED80C2CFE4DC100E9AB10 /* AppDelegate.swift */; };
 		EE9ED80F2CFE4DC100E9AB10 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9ED80E2CFE4DC100E9AB10 /* SceneDelegate.swift */; };
 		EE9ED8112CFE4DC100E9AB10 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9ED8102CFE4DC100E9AB10 /* TrackersViewController.swift */; };
@@ -60,6 +62,11 @@
 		EE3055862D1AAB5800F696AB /* TrackerCreatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCreatingViewController.swift; sourceTree = "<group>"; };
 		EE3055882D1ABCFC00F696AB /* HabitCreatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCreatingViewController.swift; sourceTree = "<group>"; };
 		EE88E60B2D91953400315399 /* TrackersViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewControllerProtocol.swift; sourceTree = "<group>"; };
+		EE88E60E2D91ACA500315399 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EE88E6112D91ACC700315399 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		EE88E6132D91B2B100315399 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		EE88E6142D91B2B100315399 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EE88E6152D91B2B100315399 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		EE9ED8092CFE4DC100E9AB10 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE9ED80C2CFE4DC100E9AB10 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EE9ED80E2CFE4DC100E9AB10 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -196,6 +203,8 @@
 			isa = PBXGroup;
 			children = (
 				EE9ED8182CFE4DC300E9AB10 /* Assets.xcassets */,
+				EE88E60D2D91ACA500315399 /* Localizable.strings */,
+				EE88E6102D91ACC700315399 /* Localizable.stringsdict */,
 				EE9ED81A2CFE4DC300E9AB10 /* LaunchScreen.storyboard */,
 				EE9ED81D2CFE4DC300E9AB10 /* Info.plist */,
 			);
@@ -248,11 +257,12 @@
 			};
 			buildConfigurationList = EE9ED8042CFE4DC100E9AB10 /* Build configuration list for PBXProject "Tracker" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = EE9ED8002CFE4DC100E9AB10;
 			productRefGroup = EE9ED80A2CFE4DC100E9AB10 /* Products */;
@@ -270,6 +280,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE9ED8192CFE4DC300E9AB10 /* Assets.xcassets in Resources */,
+				EE88E6122D91ACC700315399 /* Localizable.stringsdict in Resources */,
+				EE88E60F2D91ACA500315399 /* Localizable.strings in Resources */,
 				EE9ED81C2CFE4DC300E9AB10 /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -323,10 +335,29 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		EE88E60D2D91ACA500315399 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EE88E60E2D91ACA500315399 /* en */,
+				EE88E6142D91B2B100315399 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		EE88E6102D91ACC700315399 /* Localizable.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EE88E6112D91ACC700315399 /* en */,
+				EE88E6152D91B2B100315399 /* ru */,
+			);
+			name = Localizable.stringsdict;
+			sourceTree = "<group>";
+		};
 		EE9ED81A2CFE4DC300E9AB10 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				EE9ED81B2CFE4DC300E9AB10 /* Base */,
+				EE88E6132D91B2B100315399 /* ru */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -339,6 +370,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -402,6 +434,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
