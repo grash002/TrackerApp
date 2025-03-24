@@ -324,9 +324,10 @@ extension CreatingViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 0 {
          tableView.deselectRow(at: indexPath, animated: false)
             
-            let selectCategoryViewController = SelectCategoryViewController()
-            selectCategoryViewController.delegateCreatingView = self
-            selectCategoryViewController.delegateTrackersView = delegate
+            let selectCategoryViewController = SelectCategoryViewController(
+                viewModel: SelectCategoryViewModel(delegateTrackersView: delegate,
+                                                   delegateCreatingView: self)
+            )
             present(selectCategoryViewController, animated: true)
             
         } else {

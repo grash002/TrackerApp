@@ -1,6 +1,6 @@
 import UIKit
 
-final class TrackersViewController: UIViewController {
+final class TrackersViewController: UIViewController, TrackersViewControllerProtocol {
     
     // MARK: - Public Properties
     

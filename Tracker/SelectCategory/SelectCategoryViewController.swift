@@ -3,13 +3,13 @@ import UIKit
 final class SelectCategoryViewController: UIViewController {
 
     // MARK: - Public Properties
-    weak var delegateTrackersView: TrackersViewController?
-    weak var delegateCreatingView: CreatingViewControllerProtocol?
     
     // MARK: - Private Properties
+    private let viewModel: SelectCategoryViewModel
+    
     private let tableViewCategories = UITableView()
     lazy private var tableViewHeightConstraint: NSLayoutConstraint = {
-        tableViewCategories.heightAnchor.constraint(equalToConstant: CGFloat((delegateTrackersView?.categories.count ?? 0) * 75))
+        tableViewCategories.heightAnchor.constraint(equalToConstant: CGFloat(viewModel.categories.count * 75))
     }()
     
     lazy private var createButton: UIButton = {
@@ -84,14 +84,29 @@ final class SelectCategoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
+        
+        viewModel.onCreateCategoryRequested = { [weak self] in
+            let categoryCreatingVC = CategoryCreatingViewController()
+            categoryCreatingVC.delegate = self
+            self?.present(categoryCreatingVC, animated: true)
+        }
+    }
+    
+    init(viewModel: SelectCategoryViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Public Methods
     func addCategory(categoryTitle: String) {
-        delegateCreatingView?.addCategory(toCategory: categoryTitle)
+        viewModel.addCategory(title: categoryTitle)
         refreshConstraints()
         tableViewCategories.reloadData()
-        tableViewHeightConstraint.constant = CGFloat((delegateTrackersView?.categories.count ?? 0) * 75)
+        tableViewHeightConstraint.constant = CGFloat(viewModel.categories.count * 75)
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }
@@ -99,8 +114,8 @@ final class SelectCategoryViewController: UIViewController {
         tableViewCategories.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
     
-    func refreshConstraints() {       
-    if delegateTrackersView?.categories.count == 0 {
+    func refreshConstraints() {
+    if viewModel.categories.count == 0 {
         tableViewCategories.isHidden = true
         stackViewNoCategories.isHidden = false
         NSLayoutConstraint.activate(noCategoryConstr)
@@ -147,9 +162,8 @@ final class SelectCategoryViewController: UIViewController {
     
     @objc
     private func createButtonDidTap(){
-        let categoryCreatingViewController = CategoryCreatingViewController()
-        categoryCreatingViewController.delegate = self
-        self.present(categoryCreatingViewController, animated: true)
+        viewModel.createButtonDidTap(controller: self)
+        tableViewCategories.reloadData()
     }
 }
 
@@ -161,7 +175,7 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        delegateTrackersView?.categories.count ?? 0
+        viewModel.categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -170,7 +184,7 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
                                       for: indexPath)
         cell.backgroundColor = UIColor(named: "BackGroundFields")
         cell.selectionStyle = .none
-        cell.textLabel?.text = delegateTrackersView?.categories[indexPath.row].title
+        cell.textLabel?.text = viewModel.categories[indexPath.row].title
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
         return cell
     }
@@ -182,7 +196,7 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectRow = tableView.cellForRow(at: indexPath)
         selectRow?.accessoryType = .checkmark
-        delegateCreatingView?.selectCategory(categoryTitle: delegateTrackersView?.categories[indexPath.row].title ?? "")
+        viewModel.selectCategory(index: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
