@@ -1,20 +1,18 @@
 import UIKit
 final class SelectCategoryViewModel {
     
-    weak var delegateTrackersView: TrackersViewControllerProtocol?
-    weak var delegateCreatingView: CreatingViewControllerProtocol?
-
+    //MARK: - Public properties
+    var onGetCategoriesRequested: (()-> [TrackerCategory]?)?
+    var onAddCategoryRequested: ((String) -> Void)?
+    var onSelectCategoryRequested: ((String) -> Void)?
+    
     var onCreateCategoryRequested: (() -> Void)?
+    
     var categories: [TrackerCategory] {
-        delegateTrackersView?.categories ?? []
-    }
-
-    init(delegateTrackersView: TrackersViewControllerProtocol?,
-         delegateCreatingView: CreatingViewControllerProtocol?) {
-        self.delegateTrackersView = delegateTrackersView
-        self.delegateCreatingView = delegateCreatingView
+        onGetCategoriesRequested?() ?? []
     }
     
+    //MARK: - Public methods
     func numberOfCategories() -> Int {
         categories.count
     }
@@ -22,12 +20,12 @@ final class SelectCategoryViewModel {
     func createButtonDidTap(controller: SelectCategoryViewController){
         onCreateCategoryRequested?()
     }
-
+    
     func addCategory(title: String) {
-        delegateCreatingView?.addCategory(toCategory: title)
+        onAddCategoryRequested?(title)
     }
     
     func selectCategory(index: Int) {
-        delegateCreatingView?.selectCategory(categoryTitle: categories[index].title)
+        onSelectCategoryRequested?(categories[index].title)
     }
 }

@@ -1,11 +1,13 @@
 import UIKit
 
 final class SelectCategoryViewController: UIViewController {
-
+    
     // MARK: - Public Properties
+    weak var delegateCreatingView: CreatingViewControllerProtocol?
+    weak var delegateTrackersView: TrackersViewControllerProtocol?
     
     // MARK: - Private Properties
-    private let viewModel: SelectCategoryViewModel
+    private lazy var viewModel = SelectCategoryViewModel()
     
     private let tableViewCategories = UITableView()
     lazy private var tableViewHeightConstraint: NSLayoutConstraint = {
@@ -20,8 +22,8 @@ final class SelectCategoryViewController: UIViewController {
         button.tintColor = .white
         button.backgroundColor = .black
         button.addTarget(self,
-                               action: #selector(createButtonDidTap),
-                               for: .touchUpInside)
+                         action: #selector(createButtonDidTap),
+                         for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(button)
         return button
@@ -79,23 +81,42 @@ final class SelectCategoryViewController: UIViewController {
         tableViewHeightConstraint,
         tableViewCategories.bottomAnchor.constraint(lessThanOrEqualTo: createButton.topAnchor)
     ]}()
-
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        setView()
         
         viewModel.onCreateCategoryRequested = { [weak self] in
             let categoryCreatingVC = CategoryCreatingViewController()
             categoryCreatingVC.delegate = self
             self?.present(categoryCreatingVC, animated: true)
         }
+        
+        viewModel.onAddCategoryRequested = { [weak self] title in
+            self?.delegateCreatingView?.addCategory(toCategory: title)
+        }
+        
+        viewModel.onGetCategoriesRequested = { [weak self] in
+            self?.delegateTrackersView?.categories
+        }
+        
+        viewModel.onGetCategoriesRequested = { [weak self] in
+            self?.delegateTrackersView?.categories
+        }
+        
+        viewModel.onSelectCategoryRequested = { [weak self] title in
+            self?.delegateCreatingView?.selectCategory(categoryTitle: title)
+        }
+        
+        setView()
     }
     
-    init(viewModel: SelectCategoryViewModel) {
-        self.viewModel = viewModel
+    init(delegateTrackersView: TrackersViewControllerProtocol?, delegateCreatingView: CreatingViewControllerProtocol?) {
+        self.delegateTrackersView = delegateTrackersView
+        self.delegateCreatingView = delegateCreatingView
         super.init(nibName: nil, bundle: nil)
     }
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -115,33 +136,33 @@ final class SelectCategoryViewController: UIViewController {
     }
     
     func refreshConstraints() {
-    if viewModel.categories.count == 0 {
-        tableViewCategories.isHidden = true
-        stackViewNoCategories.isHidden = false
-        NSLayoutConstraint.activate(noCategoryConstr)
-        NSLayoutConstraint.deactivate(categoryConstr)
-        
-    } else {
-        tableViewCategories.isHidden = false
-        stackViewNoCategories.isHidden = true
-        
-        tableViewCategories.dataSource = self
-        tableViewCategories.delegate = self
-        tableViewCategories.register(UITableViewCell.self,
-                                  forCellReuseIdentifier: "cell")
-        tableViewCategories.translatesAutoresizingMaskIntoConstraints = false
-        tableViewCategories.backgroundColor = .white
-        tableViewCategories.layer.cornerRadius = 16
-        tableViewCategories.tableFooterView = UIView()
-        tableViewCategories.separatorInset = UIEdgeInsets(top: 0,
-                                                       left: 16,
-                                                       bottom: 0,
-                                                       right: 16)
-        view.addSubview(tableViewCategories)
-        
-        NSLayoutConstraint.activate(categoryConstr)
-        NSLayoutConstraint.deactivate(noCategoryConstr)
-    }
+        if viewModel.numberOfCategories() == 0 {
+            tableViewCategories.isHidden = true
+            stackViewNoCategories.isHidden = false
+            NSLayoutConstraint.activate(noCategoryConstr)
+            NSLayoutConstraint.deactivate(categoryConstr)
+            
+        } else {
+            tableViewCategories.isHidden = false
+            stackViewNoCategories.isHidden = true
+            
+            tableViewCategories.dataSource = self
+            tableViewCategories.delegate = self
+            tableViewCategories.register(UITableViewCell.self,
+                                         forCellReuseIdentifier: "cell")
+            tableViewCategories.translatesAutoresizingMaskIntoConstraints = false
+            tableViewCategories.backgroundColor = .white
+            tableViewCategories.layer.cornerRadius = 16
+            tableViewCategories.tableFooterView = UIView()
+            tableViewCategories.separatorInset = UIEdgeInsets(top: 0,
+                                                              left: 16,
+                                                              bottom: 0,
+                                                              right: 16)
+            view.addSubview(tableViewCategories)
+            
+            NSLayoutConstraint.activate(categoryConstr)
+            NSLayoutConstraint.deactivate(noCategoryConstr)
+        }
     }
     
     // MARK: - Private Methods
@@ -157,7 +178,7 @@ final class SelectCategoryViewController: UIViewController {
             createButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             createButton.heightAnchor.constraint(equalToConstant: 60)
-            ])
+        ])
     }
     
     @objc
@@ -167,7 +188,7 @@ final class SelectCategoryViewController: UIViewController {
     }
 }
 
-    //MARK: - Extensions
+//MARK: - Extensions
 extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         1
@@ -175,13 +196,13 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        viewModel.categories.count
+        viewModel.numberOfCategories()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
-                                      for: indexPath)
+                                                 for: indexPath)
         cell.backgroundColor = UIColor(named: "BackGroundFields")
         cell.selectionStyle = .none
         cell.textLabel?.text = viewModel.categories[indexPath.row].title

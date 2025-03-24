@@ -6,7 +6,7 @@ final class TrackerRecordStore: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - Public Properties
     static let shared = TrackerRecordStore()
     weak var delegate: TrackerRecordStoreDelegate?
-
+    
     // MARK: - Private Properties
     private let dataBaseStore = DataBaseStore.shared
     private let context = DataBaseStore.shared.persistentContainer.viewContext

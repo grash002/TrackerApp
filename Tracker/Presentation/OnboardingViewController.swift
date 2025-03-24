@@ -87,7 +87,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         return button
     }()
     
-
+    
     // MARK: - Initializers
     override init(transitionStyle style: UIPageViewController.TransitionStyle,
                   navigationOrientation: UIPageViewController.NavigationOrientation,
@@ -121,9 +121,9 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
             onboardingButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                                                      constant: -50),
             onboardingButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                                                     constant: -20),
+                                                       constant: -20),
             onboardingButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                                                     constant: 20),
+                                                      constant: 20),
             onboardingButton.heightAnchor.constraint(equalToConstant: 60),
             
         ])
@@ -156,9 +156,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
             return nil
         }
         let viewControllerIndexAfter = viewControllerIndex + 1
-        
         guard viewControllerIndexAfter < pages.count else { return pages.first }
-        
         return pages[viewControllerIndexAfter]
     }
     

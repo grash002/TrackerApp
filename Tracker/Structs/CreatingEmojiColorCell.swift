@@ -64,7 +64,7 @@ final class CreatingEmojiColorCell: UICollectionViewCell {
     func configure(labelText: String?, backGroundColor: UIColor?){
         self.label.text = labelText
         colorView.backgroundColor = backGroundColor
-
+        
         if backGroundColor != nil {
             colorView.isHidden = false
             label.isHidden = true

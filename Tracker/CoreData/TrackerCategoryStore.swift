@@ -7,7 +7,7 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
     static let shared = TrackerCategoryStore()
     weak var delegate: TrackerCategoryStoreDelegate?
     var categories: [TrackerCategory]?
-
+    
     // MARK: - Private Properties
     private let trackerStore = TrackerStore.shared
     private let dataBaseStore = DataBaseStore.shared
@@ -25,8 +25,8 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - Public Methods
     func updateTrackersCategory(tracker: Tracker?, idCategory: UUID, categoryName: String?) {
         if var categories,
-            let tracker,
-            let index = categories.firstIndex(where: {$0.id == idCategory}),
+           let tracker,
+           let index = categories.firstIndex(where: {$0.id == idCategory}),
            !categories[index].trackers.contains(where: {$0.id == tracker.id}){
             categories[index].trackers.append(tracker)
             self.categories = categories
@@ -43,27 +43,27 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
     func addTrackersCategory(
         idCategory: UUID,
         tracker: Tracker) {
-        updateTrackersCategory(tracker: tracker,
-                               idCategory: idCategory,
-                               categoryName: nil)
-        
-        let request = TrackerCategoryCoreData.fetchRequest()
-        request.predicate = NSPredicate(
-            format: "idTrackerCategory == %@",
-            idCategory as CVarArg
-        )
-        
-        if let category = try? context.fetch(request).first {
-            if let _ = category.idTrackers {
-                category.idTrackers?.append(tracker.id.uuidString)
-            } else {
-                let idTrackers = [tracker.id.uuidString]
-                category.idTrackers = idTrackers
+            updateTrackersCategory(tracker: tracker,
+                                   idCategory: idCategory,
+                                   categoryName: nil)
+            
+            let request = TrackerCategoryCoreData.fetchRequest()
+            request.predicate = NSPredicate(
+                format: "idTrackerCategory == %@",
+                idCategory as CVarArg
+            )
+            
+            if let category = try? context.fetch(request).first {
+                if let _ = category.idTrackers {
+                    category.idTrackers?.append(tracker.id.uuidString)
+                } else {
+                    let idTrackers = [tracker.id.uuidString]
+                    category.idTrackers = idTrackers
+                }
             }
+            dataBaseStore.saveContext()
+            trackerStore.createTracker(tracker)
         }
-        dataBaseStore.saveContext()
-        trackerStore.createTracker(tracker)
-    }
     
     func createTrackerCategory(
         idCategory: UUID,
@@ -72,7 +72,7 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
         updateTrackersCategory(tracker: nil,
                                idCategory: idCategory,
                                categoryName: categoryName)
-
+        
         
         let request = TrackerCategoryCoreData.fetchRequest()
         request.predicate = NSPredicate(
@@ -95,6 +95,7 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
     
     func fetchTrackersCategory() -> [TrackerCategory] {
         let fetchTrackers = trackerStore.fetchTrackers()
+        
         
         return fetchedResultsController?.fetchedObjects?.compactMap { category in
             guard let idTrackerCategory = category.idTrackerCategory, let categoryName = category.categoryName else {

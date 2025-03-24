@@ -15,7 +15,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
         return titleLabel
     }()
     
-
+    
     // MARK: - Private Properties
     private let scrollView = UIScrollView()
     private var selectedCategory: String?
@@ -53,10 +53,10 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
         return collectionView
     }()
     
-
+    
     private let emojiList = ["🙂","😻","🌺","🐶","❤️","😱","😇","😡","🥶","🤔","🙌","🍔","🥦","🏓","🥇","🎸","🏝️","😪",]
     private let colorList = ["#FD4C49", "#FF881E", "#007BFA", "#6E44FE", "#33CF69", "#E66DD4", "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC", "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"]
-
+    
     // MARK: - Override Methods
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         scrollView.endEditing(true)
@@ -127,7 +127,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor)
         ])
-       
+        
         collectionView.reloadData()
         
         tableViewButtons.dataSource = self
@@ -233,11 +233,11 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
     
     private func enableButtonWithCond() {
         if  textField.text != "" &&
-            textField.text != nil &&
-            selectedCategory != nil &&
-            selectedSchedule != nil &&
-            selectedColor != nil &&
-            selectedEmoji != nil {
+                textField.text != nil &&
+                selectedCategory != nil &&
+                selectedSchedule != nil &&
+                selectedColor != nil &&
+                selectedEmoji != nil {
             createButton.backgroundColor = .black
             createButton.isEnabled = true
         }
@@ -277,9 +277,9 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
     @objc
     private func createButtonDidTap() {
         guard let text = textField.text,
-        let selectedSchedule ,
-        let selectedEmoji,
-        let selectedColor else { return }
+              let selectedSchedule ,
+              let selectedEmoji,
+              let selectedColor else { return }
         
         let newTracker = Tracker(id: UUID(), name: text, colorHex: selectedColor, emoji: selectedEmoji, schedule: selectedSchedule)
         addTracker(tracker: newTracker, toCategory: selectedCategory ?? "")
@@ -322,12 +322,10 @@ extension CreatingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-         tableView.deselectRow(at: indexPath, animated: false)
+            tableView.deselectRow(at: indexPath, animated: false)
             
-            let selectCategoryViewController = SelectCategoryViewController(
-                viewModel: SelectCategoryViewModel(delegateTrackersView: delegate,
-                                                   delegateCreatingView: self)
-            )
+            let selectCategoryViewController = SelectCategoryViewController(delegateTrackersView: delegate, delegateCreatingView: self)
+            
             present(selectCategoryViewController, animated: true)
             
         } else {
@@ -341,7 +339,7 @@ extension CreatingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
     }
-
+    
 }
 extension CreatingViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout  {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -418,4 +416,4 @@ extension CreatingViewController : UICollectionViewDelegate, UICollectionViewDat
 }
 
 
- 
+

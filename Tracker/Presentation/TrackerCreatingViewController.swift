@@ -4,7 +4,7 @@ final class TrackerCreatingViewController: UIViewController {
     
     // MARK: - Public Properties
     weak var delegate: TrackersViewController?
-
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +41,14 @@ final class TrackerCreatingViewController: UIViewController {
         irregularEventButton.backgroundColor = .black
         irregularEventButton.layer.cornerRadius = 16
         irregularEventButton.addTarget(self,
-                                    action: #selector(irregularCreateButtonDidTap),
-                                    for: .touchUpInside)
+                                       action: #selector(irregularCreateButtonDidTap),
+                                       for: .touchUpInside)
         irregularEventButton.translatesAutoresizingMaskIntoConstraints = false
         
         let stackButtons = UIStackView(arrangedSubviews: [
             habitCreateButton,
             irregularEventButton
-                                                         ])
+        ])
         stackButtons.axis = .vertical
         stackButtons.translatesAutoresizingMaskIntoConstraints = false
         stackButtons.spacing = 16
@@ -78,7 +78,7 @@ final class TrackerCreatingViewController: UIViewController {
         let habitCreatingViewController = HabitCreatingViewController()
         habitCreatingViewController.delegate = delegate
         delegate?.present(habitCreatingViewController,
-                     animated: true)
+                          animated: true)
     }
     
     @objc
@@ -87,7 +87,7 @@ final class TrackerCreatingViewController: UIViewController {
         let irregularEventCreatingViewController = IrregularEventCreatingViewController()
         irregularEventCreatingViewController.delegate = delegate
         delegate?.present(irregularEventCreatingViewController,
-                     animated: true)
+                          animated: true)
     }
 }
 

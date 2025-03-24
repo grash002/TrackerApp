@@ -142,24 +142,24 @@ final class TrackersViewController: UIViewController, TrackersViewControllerProt
                 }
             }
         }
-            
-            var flagCategories = true
-            selectedCategories.forEach({ flagCategories = flagCategories && $0.trackers.isEmpty })
-            
-            if selectedCategories.isEmpty || flagCategories {
-                NSLayoutConstraint.activate(noTrackerConstraints)
-                NSLayoutConstraint.deactivate(trackerConstraints)
-                collectionView.isHidden = true
-                stackViewNoTrackers.isHidden = false
-            }
-            else {
-                NSLayoutConstraint.activate(trackerConstraints)
-                NSLayoutConstraint.deactivate(noTrackerConstraints)
-                collectionView.isHidden = false
-                stackViewNoTrackers.isHidden = true
-            }
-        collectionView.reloadData()
+        
+        var flagCategories = true
+        selectedCategories.forEach({ flagCategories = flagCategories && $0.trackers.isEmpty })
+        
+        if selectedCategories.isEmpty || flagCategories {
+            NSLayoutConstraint.activate(noTrackerConstraints)
+            NSLayoutConstraint.deactivate(trackerConstraints)
+            collectionView.isHidden = true
+            stackViewNoTrackers.isHidden = false
         }
+        else {
+            NSLayoutConstraint.activate(trackerConstraints)
+            NSLayoutConstraint.deactivate(noTrackerConstraints)
+            collectionView.isHidden = false
+            stackViewNoTrackers.isHidden = true
+        }
+        collectionView.reloadData()
+    }
     
     // MARK: - Private Methods
     private func setView() {
@@ -270,7 +270,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
 }
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, 
+    func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let totalHorizontalInsets = 16 + 16
@@ -289,8 +289,8 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
                         at indexPath: IndexPath) -> UICollectionReusableView {
         
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
-                                                                     withReuseIdentifier: TrackerHeaderCell.identifier,
-                                                                     for: indexPath) as? TrackerHeaderCell
+                                                                           withReuseIdentifier: TrackerHeaderCell.identifier,
+                                                                           for: indexPath) as? TrackerHeaderCell
         else { return UICollectionReusableView() }
         header.titleLabel.text = selectedCategories[indexPath.section].title
         return header
