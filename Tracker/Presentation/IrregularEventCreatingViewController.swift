@@ -20,7 +20,7 @@ extension IrregularEventCreatingViewController {
     }
     
     override func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
+                            numberOfRowsInSection section: Int) -> Int {
         1
     }
     

@@ -6,14 +6,14 @@ final class TabBarController: UITabBarController {
         
         let trackersViewController = TrackersViewController()
         trackersViewController.tabBarItem = UITabBarItem(title: "Трекеры",
-                                                        image: UIImage(named: "TrackerTabBar"),
-                                                        selectedImage: nil)
+                                                         image: UIImage(named: "TrackerTabBar"),
+                                                         selectedImage: nil)
         
         let statisticViewController = StatisticViewController()
         
         statisticViewController.tabBarItem = UITabBarItem(title: "Статистика",
-                                                        image: UIImage(named: "StatisticTabBar"),
-                                                        selectedImage: nil)
+                                                          image: UIImage(named: "StatisticTabBar"),
+                                                          selectedImage: nil)
         
         let topBorder = CALayer()
         topBorder.backgroundColor = UIColor.lightGray.cgColor

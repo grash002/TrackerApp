@@ -3,7 +3,7 @@ import UIKit
 final class SelectScheduleViewController: UIViewController {
     // MARK: - Public Properties
     var delegate: CreatingViewControllerProtocol?
-
+    
     // MARK: - Private Properties
     private let tableViewSchedule = UITableView()
     private let createButton = UIButton(type: .custom)
@@ -38,9 +38,9 @@ final class SelectScheduleViewController: UIViewController {
         tableViewSchedule.layer.cornerRadius = 16
         tableViewSchedule.tableFooterView = UIView()
         tableViewSchedule.separatorInset = UIEdgeInsets(top: 0,
-                                                       left: 16,
-                                                       bottom: 0,
-                                                       right: 16)
+                                                        left: 16,
+                                                        bottom: 0,
+                                                        right: 16)
         view.addSubview(tableViewSchedule)
         
         createButton.setTitle("Готово", for: .normal)
@@ -80,7 +80,7 @@ final class SelectScheduleViewController: UIViewController {
 
 // MARK: - Extension
 extension SelectScheduleViewController: UITableViewDelegate, UITableViewDataSource {
-
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         1

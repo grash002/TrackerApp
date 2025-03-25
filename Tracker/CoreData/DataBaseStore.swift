@@ -6,20 +6,12 @@ final class DataBaseStore {
     static let shared = DataBaseStore()
     
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(
-            name: "Tracker"
-        )
-        container.loadPersistentStores(completionHandler: {
-            (
-                storeDescription,
-                error
-            ) in
+        let container = NSPersistentContainer(name: "Tracker")
+        container.loadPersistentStores { storeDescription, error in
             if let error = error as NSError? {
-                fatalError(
-                    "Unresolved error \(error), \(error.userInfo)"
-                )
+                print("Unresolved error \(error), \(error.userInfo)")
             }
-        })
+        }
         return container
     }()
     
@@ -32,9 +24,7 @@ final class DataBaseStore {
                 try context.save()
             } catch {
                 let nserror = error as NSError
-                print(
-                    "Unresolved error \(nserror), \(nserror.userInfo)"
-                )
+                print("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }
@@ -42,7 +32,7 @@ final class DataBaseStore {
     func deleteAll(from entity: String) {
         let context = persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
-
+        
         do {
             let objects = try context.fetch(fetchRequest)
             for object in objects {

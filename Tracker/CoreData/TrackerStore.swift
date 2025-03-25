@@ -48,7 +48,7 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         
         dataBaseStore.saveContext()
     }
-   
+    
     func fetchTrackers() -> [Tracker] {
         
         guard let fetchedResultsController else { return [] }
@@ -58,10 +58,10 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
             
             let trackers: [Tracker] = fetchedObjects.compactMap { item in
                 if let idTracker = item.idTracker,
-                      let trackerName = item.trackerName,
-                      let colorHex = item.colorHex,
-                      let emoji = item.emoji,
-                    let schedule = Schedule.toSchedule(from: item.schedule ?? "") {
+                   let trackerName = item.trackerName,
+                   let colorHex = item.colorHex,
+                   let emoji = item.emoji,
+                   let schedule = Schedule.toSchedule(from: item.schedule ?? "") {
                     return Tracker(id: idTracker,
                                    name: trackerName,
                                    colorHex: colorHex,

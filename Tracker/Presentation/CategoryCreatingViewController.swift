@@ -9,17 +9,17 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
     private let textField = UITextField()
     private let createButton = UIButton(type: .custom)
     private let titleLabel = UILabel()
-
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
     }
-
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
-
+    
     // MARK: - Private Methods
     private func setView() {
         view.backgroundColor = .white
@@ -31,7 +31,7 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
-
+        
         createButton.setTitle("Готово", for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
