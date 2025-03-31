@@ -6,7 +6,7 @@ final class TrackerRecordStore: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: - Public Properties
     static let shared = TrackerRecordStore()
     weak var delegate: TrackerRecordStoreDelegate?
-
+    
     // MARK: - Private Properties
     private let dataBaseStore = DataBaseStore.shared
     private let context = DataBaseStore.shared.persistentContainer.viewContext
@@ -70,8 +70,20 @@ final class TrackerRecordStore: NSObject, NSFetchedResultsControllerDelegate {
         return fetchedResultsController?.fetchedObjects?.compactMap { item in
             guard let idTracker = item.idTracker else { return nil }
             let trackingDates = item.trackingDates ?? []
-            return CompletedTrackers(trackedId: idTracker, dates: trackingDates)
+            return CompletedTrackers(trackerId: idTracker, dates: trackingDates)
         } ?? []
+    }
+    
+    func deleteRecords(id: UUID) {
+        let fetchRequest = TrackerRecordCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "idTracker == %@", id as CVarArg)
+
+        if let results = try? context.fetch(fetchRequest){
+            for record in results {
+                context.delete(record)
+            }
+        }
+        dataBaseStore.saveContext()
     }
     
     // MARK: - NSFetchedResultsControllerDelegate

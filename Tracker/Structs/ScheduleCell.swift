@@ -16,7 +16,7 @@ final class ScheduleCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         label.font = UIFont.systemFont(ofSize: 17)
-        label.textColor = .black
+        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         
         switcher.addTarget(self,

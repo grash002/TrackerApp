@@ -4,30 +4,36 @@ final class TrackerCreatingViewController: UIViewController {
     
     // MARK: - Public Properties
     weak var delegate: TrackersViewController?
-
+    let analyticsService = AnalyticsService()
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        setView()
+        setView()      
+        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     // MARK: - Private Methods
     private func setView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         let titleLabel = UILabel()
-        titleLabel.text = "Создание трекера"
+        titleLabel.text = NSLocalizedString("trackerCreatingView.title", comment: "")
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .label
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
         let habitCreateButton = UIButton(type: .custom)
-        habitCreateButton.setTitle("Привычка", for: .normal)
+        habitCreateButton.setTitle(NSLocalizedString("trackerCreatingView.habitTitle", comment: ""), for: .normal)
         habitCreateButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        habitCreateButton.titleLabel?.textColor = .white
-        habitCreateButton.backgroundColor = .black
+        habitCreateButton.setTitleColor(.invertedLabel, for: .normal)
+        habitCreateButton.backgroundColor = .label
         habitCreateButton.layer.cornerRadius = 16
         habitCreateButton.addTarget(self,
                                     action: #selector(habitCreateButtonDidTap),
@@ -35,20 +41,20 @@ final class TrackerCreatingViewController: UIViewController {
         habitCreateButton.translatesAutoresizingMaskIntoConstraints = false
         
         let irregularEventButton = UIButton(type: .custom)
-        irregularEventButton.setTitle("Нерегулярные событие", for: .normal)
+        irregularEventButton.setTitle(NSLocalizedString("trackerCreatingView.irregularEventTitle", comment: ""), for: .normal)
         irregularEventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        irregularEventButton.titleLabel?.textColor = .white
-        irregularEventButton.backgroundColor = .black
+        irregularEventButton.setTitleColor(.invertedLabel, for: .normal)
+        irregularEventButton.backgroundColor = .label
         irregularEventButton.layer.cornerRadius = 16
         irregularEventButton.addTarget(self,
-                                    action: #selector(irregularCreateButtonDidTap),
-                                    for: .touchUpInside)
+                                       action: #selector(irregularCreateButtonDidTap),
+                                       for: .touchUpInside)
         irregularEventButton.translatesAutoresizingMaskIntoConstraints = false
         
         let stackButtons = UIStackView(arrangedSubviews: [
             habitCreateButton,
             irregularEventButton
-                                                         ])
+        ])
         stackButtons.axis = .vertical
         stackButtons.translatesAutoresizingMaskIntoConstraints = false
         stackButtons.spacing = 16
@@ -78,7 +84,7 @@ final class TrackerCreatingViewController: UIViewController {
         let habitCreatingViewController = HabitCreatingViewController()
         habitCreatingViewController.delegate = delegate
         delegate?.present(habitCreatingViewController,
-                     animated: true)
+                          animated: true)
     }
     
     @objc
@@ -87,7 +93,7 @@ final class TrackerCreatingViewController: UIViewController {
         let irregularEventCreatingViewController = IrregularEventCreatingViewController()
         irregularEventCreatingViewController.delegate = delegate
         delegate?.present(irregularEventCreatingViewController,
-                     animated: true)
+                          animated: true)
     }
 }
 

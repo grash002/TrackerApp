@@ -3,29 +3,41 @@ import UIKit
 final class SelectScheduleViewController: UIViewController {
     // MARK: - Public Properties
     var delegate: CreatingViewControllerProtocol?
-
+    
     // MARK: - Private Properties
     private let tableViewSchedule = UITableView()
     private let createButton = UIButton(type: .custom)
     private let totalRows = 7
-    private let weakDays = ["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота","Воскресенье"]
+    private let weakDays = [NSLocalizedString("selectSchedule.Monday", comment: ""),
+                            NSLocalizedString("selectSchedule.Tuesday", comment: ""),
+                            NSLocalizedString("selectSchedule.Wednesday", comment: ""),
+                            NSLocalizedString("selectSchedule.Thursday", comment: ""),
+                            NSLocalizedString("selectSchedule.Friday", comment: ""),
+                            NSLocalizedString("selectSchedule.Saturday", comment: ""),
+                            NSLocalizedString("selectSchedule.Sunday", comment: "")]
     private var schedule = Schedule(days: [])
+    private let analyticsService = AnalyticsService()
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
+        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     // MARK: - Private Methods
     private func setView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         let titleLabel = UILabel()
-        titleLabel.text = "Расписание"
+        titleLabel.text = NSLocalizedString("selectSchedule.title", comment: "")
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .label
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
@@ -34,20 +46,20 @@ final class SelectScheduleViewController: UIViewController {
         tableViewSchedule.register(ScheduleCell.self,
                                    forCellReuseIdentifier: ScheduleCell.identifier)
         tableViewSchedule.translatesAutoresizingMaskIntoConstraints = false
-        tableViewSchedule.backgroundColor = .white
+        tableViewSchedule.backgroundColor = .systemBackground
         tableViewSchedule.layer.cornerRadius = 16
         tableViewSchedule.tableFooterView = UIView()
         tableViewSchedule.separatorInset = UIEdgeInsets(top: 0,
-                                                       left: 16,
-                                                       bottom: 0,
-                                                       right: 16)
+                                                        left: 16,
+                                                        bottom: 0,
+                                                        right: 16)
         view.addSubview(tableViewSchedule)
         
-        createButton.setTitle("Готово", for: .normal)
+        createButton.setTitle(NSLocalizedString("selectSchedule.createButton.Title", comment: ""), for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        createButton.tintColor = .white
-        createButton.backgroundColor = .black
+        createButton.backgroundColor = .label
+        createButton.setTitleColor(.invertedLabel, for: .normal)
         createButton.addTarget(self,
                                action: #selector(createButtonDidTap),
                                for: .touchUpInside)
@@ -80,7 +92,7 @@ final class SelectScheduleViewController: UIViewController {
 
 // MARK: - Extension
 extension SelectScheduleViewController: UITableViewDelegate, UITableViewDataSource {
-
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         1

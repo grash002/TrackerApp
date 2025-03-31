@@ -1,1 +1,60 @@
+"onBoarding.firstTitle" = "Отслеживайте только то, что хотите";
+"onBoarding.secondTitle" = "Даже если это не литры воды и йога";
+"onBoarding.buttonTitle" = "Вот это технологии!";
 
+"trackersView.title" = "Трекеры";
+"trackersView.emptyState.title" = "Что будем отслеживать?";
+"trackersView.searchBar.placeHolder" = "Поиск";
+"trackersView.pinnedCategory" = "Закрепленные";
+"trackersView.filterButton" = "Фильтр";
+"trackersView.NotFound.title" = "Ничего не найдено";
+
+"tabBarView.trackerView.title" = "Трекеры";
+"tabBarView.statisticView.title" = "Статистика";
+
+"trackerCreatingView.title" = "Создание трекера";
+"trackerCreatingView.habitTitle" = "Привычка";
+"trackerCreatingView.irregularEventTitle" = "Нерегулярное событие";
+
+"creatingView.irregularEventTitle" = "Новое нерегулярное событие";
+"creatingView.EditTrackerTitle" = "Редактирование привычки";
+"creatingView.habitTitle" = "Новая привычка";
+"creatingView.textField.placeholder" = "Введите название трекера";
+"creatingView.warningLabel" = "Ограничение %d символов";
+"creatingView.categoryTitle" = "Категории";
+"creatingView.scheduleTitle" = "Расписание";
+"creatingView.colorTitle" = "Цвет";
+"creatingView.emojiTitle" = "Emoji";
+"creatingView.creatingButton.title" = "Создать";
+"creatingView.cancellingButton.title" = "Отменить";
+
+"selectCategory.title" = "Категория";
+"selectCategory.emptyState.title" = "Привычки и события можно\n объединить по смыслу";
+"selectCategory.button.title" = "Добавить категорию";
+
+"selectSchedule.Monday" = "Понедельник";
+"selectSchedule.Tuesday" = "Вторник";
+"selectSchedule.Wednesday" = "Среда";
+"selectSchedule.Thursday" = "Четверг";
+"selectSchedule.Friday" = "Пятница";
+"selectSchedule.Saturday" = "Суббота";
+"selectSchedule.Sunday" = "Воскресенье";
+"selectSchedule.title" = "Расписание";
+"selectSchedule.createButton.Title" = "Готово";
+
+"categoryCreating.textField.placeHolder" = "Введите название категории";
+"categoryCreating.button.title" = "Готово";
+"categoryCreating.title" = "Новая категория";
+
+"TrackerCell.action.pin" = "Закрепить";
+"TrackerCell.action.unpin" = "Открепить";
+"TrackerCell.action.edit" = "Редактировать";
+"TrackerCell.action.delete" = "Удалить";
+
+"filterCategory.title" = "Фильтры";
+
+"statisticView.title" = "Статистика";
+"statisticView.BestPeriod" = "Лучший период";
+"statisticView.PerfectDay" = "Идеальные дни";
+"statisticView.Completed" = "Трекеров завершено";
+"statisticView.Average" = "Среднее значение";

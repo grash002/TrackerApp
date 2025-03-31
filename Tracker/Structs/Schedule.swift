@@ -1,12 +1,12 @@
 import Foundation
 
-struct Schedule {
+struct Schedule: Equatable {
     var days: [WeekDay]
     let calendar = Calendar.current
     static let stringWeekdays = ["Пн","Вт","Ср","Чт","Пт","Сб","Вс",]
-
-    static func toSchedule(from rawString: String) -> Schedule? {
     
+    static func toSchedule(from rawString: String) -> Schedule? {
+        
         let rawWeekdays = rawString.components(separatedBy: ",")
         var weekDays: [WeekDay] = []
         

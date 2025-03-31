@@ -9,33 +9,39 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
     private let textField = UITextField()
     private let createButton = UIButton(type: .custom)
     private let titleLabel = UILabel()
-
+    private let analyticsService = AnalyticsService()
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
+        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
-
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
-
+    
     // MARK: - Private Methods
     private func setView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
-        titleLabel.text = "Новая категория"
+        titleLabel.text = NSLocalizedString("categoryCreating.title", comment: "")
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .label
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
-
-        createButton.setTitle("Готово", for: .normal)
+        
+        createButton.setTitle(NSLocalizedString("categoryCreating.button.title", comment: ""), for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        createButton.tintColor = .white
+        createButton.setTitleColor(.invertedLabel, for: .normal)
         createButton.addTarget(self,
                                action: #selector(createButtonDidTap),
                                for: .touchUpInside)
@@ -44,7 +50,7 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
         createButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(createButton)
         
-        textField.placeholder = "Введите название категории"
+        textField.placeholder = NSLocalizedString("categoryCreating.textField.placeHolder", comment: "")
         textField.leftView = UIView(frame:
                                         CGRect(x: 0,
                                                y: 0,
@@ -91,7 +97,7 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
     private func textFieldDidChange() {
         if let text = textField.text, !text.isEmpty {
             createButton.isEnabled = true
-            createButton.backgroundColor = .black
+            createButton.backgroundColor = .label
         } else {
             createButton.isEnabled = false
             createButton.backgroundColor = .gray

@@ -6,7 +6,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     private lazy var pages: [UIViewController] = {
         lazy var titleLabelFirst: UILabel = {
             let label = UILabel()
-            label.text = "Отслеживайте только то, что хотите"
+            label.text = NSLocalizedString("onBoarding.firstTitle", comment: "")
             label.font = .boldSystemFont(ofSize: 32)
             label.textColor = .black
             label.numberOfLines = 0
@@ -18,7 +18,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         
         lazy var titleLabelSecond: UILabel = {
             let label = UILabel()
-            label.text = "Даже если это не литры воды и йога"
+            label.text = NSLocalizedString("onBoarding.secondTitle", comment: "")
             label.font = .boldSystemFont(ofSize: 32)
             label.textColor = .black
             label.numberOfLines = 0
@@ -76,7 +76,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     
     private lazy var onboardingButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Вот это технологии!", for: .normal)
+        button.setTitle(NSLocalizedString("onBoarding.buttonTitle", comment: ""), for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
         button.titleLabel?.font = .systemFont(ofSize: 16)
@@ -86,8 +86,9 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         view.addSubview(button)
         return button
     }()
+    private let analyticsService = AnalyticsService()
     
-
+    
     // MARK: - Initializers
     override init(transitionStyle style: UIPageViewController.TransitionStyle,
                   navigationOrientation: UIPageViewController.NavigationOrientation,
@@ -121,12 +122,17 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
             onboardingButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                                                      constant: -50),
             onboardingButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                                                     constant: -20),
+                                                       constant: -20),
             onboardingButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                                                     constant: 20),
+                                                      constant: 20),
             onboardingButton.heightAnchor.constraint(equalToConstant: 60),
             
         ])
+        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     
@@ -156,9 +162,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
             return nil
         }
         let viewControllerIndexAfter = viewControllerIndex + 1
-        
         guard viewControllerIndexAfter < pages.count else { return pages.first }
-        
         return pages[viewControllerIndexAfter]
     }
     

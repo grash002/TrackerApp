@@ -1,6 +1,6 @@
 import Foundation
 
 struct CompletedTrackers {
-    let trackedId: UUID
+    let trackerId: UUID
     var dates: [Date]
 }

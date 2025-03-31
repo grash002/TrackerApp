@@ -5,6 +5,9 @@ final class TrackerCell: UICollectionViewCell {
     // MARK: - Public Properties
     static let identifier = "trackerCell"
     var saveCountDays: ((Bool) -> Void)?
+    var onTapMenuPin: (()-> Void)?
+    var onTapMenuEdit: (()-> Void)?
+    var onTapMenuDelete: (()-> Void)?
     
     let viewCardTracker = UIView()
     lazy var emojiLabel: UILabel = {
@@ -30,7 +33,7 @@ final class TrackerCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setTitle("+", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.systemBackground, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self,
                          action: #selector(addButtonDidTap),
@@ -42,10 +45,12 @@ final class TrackerCell: UICollectionViewCell {
     private var trackerCellColor: UIColor = .white
     private var countDays: Int = 0
     private var addButtonDidTapFlag = false
+    private var pinnedFlag = false
+    
     lazy var daysLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .black
+        label.textColor = .label
         label.text = "0 дней"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -66,6 +71,9 @@ final class TrackerCell: UICollectionViewCell {
         contentView.addSubview(viewCardTracker)
         contentView.addSubview(daysLabel)
         contentView.addSubview(addButton)
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        viewCardTracker.addInteraction(interaction)
         
         NSLayoutConstraint.activate([
             viewCardTracker.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -106,12 +114,12 @@ final class TrackerCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(nameTracker: String, emoji: String, color: UIColor, isDidTap: Bool, count: Int, isDisableAddButton: Bool, closure: @escaping ((Bool) -> Void)) {
+    func configure(nameTracker: String, emoji: String, color: UIColor, isDidTap: Bool, count: Int, isDisableAddButton: Bool, pinnedFlag: Bool, onSaveCountDays: @escaping ((Bool) -> Void), onTapMenuPin: @escaping (()-> Void), onTapMenuEdit: @escaping (()-> Void), onTapMenuDelete: @escaping (()-> Void)) {
         emojiLabel.text = emoji
         titleLabel.text = nameTracker
         viewCardTracker.backgroundColor = color
         addButton.backgroundColor = color
-        saveCountDays = closure
+        saveCountDays = onSaveCountDays
         countDays = count
         daysLabel.text = String.localizedStringWithFormat(
             NSLocalizedString("numberOfDays", comment: "Number of tracking days"),
@@ -134,29 +142,39 @@ final class TrackerCell: UICollectionViewCell {
             addButton.isEnabled = true
         }
         
+        self.pinnedFlag = pinnedFlag
+        
+        self.onTapMenuPin = onTapMenuPin
+        self.onTapMenuEdit = onTapMenuEdit
+        self.onTapMenuDelete = onTapMenuDelete
     }
     
     // MARK: - Private Methods
-    private func dateText(from number: Int) -> String {
-        let lastDigit = number % 10
-        let lastTwoDigits = number % 100
-        
-        if (11...14).contains(lastTwoDigits) {
-            return "\(number) дней"
-        }
-        
-        switch lastDigit {
-        case 1:
-            return "\(number) день"
-        case 2...4:
-            return "\(number) дня"
-        default:
-            return "\(number) дней"
-        }
-    }
-    
     @objc
     private func addButtonDidTap() {
         saveCountDays?(addButtonDidTapFlag)
+    }
+}
+
+extension TrackerCell: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
+                                configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) {[weak self] _ in
+            guard let self else { return UIMenu()}
+            let pinAction = UIAction(title: self.pinnedFlag ? NSLocalizedString("TrackerCell.action.unpin", comment: "") : NSLocalizedString("TrackerCell.action.pin", comment: "")) { [weak self] _ in
+                self?.onTapMenuPin?()
+            }
+            
+            let editAction = UIAction(title : NSLocalizedString("TrackerCell.action.edit", comment: "")) { [weak self] _ in
+                self?.onTapMenuEdit?()
+            }
+
+            let deleteAction = UIAction(title: NSLocalizedString("TrackerCell.action.delete", comment: ""), attributes: .destructive) { [weak self] _ in
+                self?.onTapMenuDelete?()
+            }
+
+            return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
+        }
     }
 }

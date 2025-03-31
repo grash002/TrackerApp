@@ -2,37 +2,24 @@ import UIKit
 
 class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingViewControllerProtocol {
     // MARK: - Public Properties
+    
+    let analyticsService = AnalyticsService()
     weak var delegate: TrackersViewController?
     var tableViewButtonsHeight: CGFloat = 150
+    var selectedEmoji: String?
+    var selectedColor: String?
     var selectedSchedule: Schedule?
+    var selectedCategory: String?
     lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .label
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(titleLabel)
         return titleLabel
     }()
-    
-
-    // MARK: - Private Properties
-    private let scrollView = UIScrollView()
-    private var selectedCategory: String?
-    private let trackerCategoryStore = TrackerCategoryStore.shared
-    private let textField = UITextField()
-    private let tableViewButtons = UITableView()
-    private let createButton = UIButton(type: .custom)
-    private let dismissButton = UIButton(type: .custom)
-    private let warningLabel = UILabel()
-    private let characterLimit = 38
-    private let contentView = UIView()
-    private var selectedEmoji: String?
-    private var selectedColor: String?
-    private lazy var tableViewTopConstraint: NSLayoutConstraint = {
-        tableViewButtons.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 0)
-    }()
-    private lazy var collectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 50, height: 50)
         layout.minimumLineSpacing = 0
@@ -52,14 +39,38 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
         
         return collectionView
     }()
+    let textField = UITextField()
+    let contentView = UIView()
+    var textFieldTopAnchorConstraint: NSLayoutConstraint?
     
-
-    private let emojiList = ["🙂","😻","🌺","🐶","❤️","😱","😇","😡","🥶","🤔","🙌","🍔","🥦","🏓","🥇","🎸","🏝️","😪",]
-    private let colorList = ["#FD4C49", "#FF881E", "#007BFA", "#6E44FE", "#33CF69", "#E66DD4", "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC", "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"]
-
+    let emojiList = ["🙂","😻","🌺","🐶","❤️","😱","😇","😡","🥶","🤔","🙌","🍔","🥦","🏓","🥇","🎸","🏝️","😪",]
+    let colorList = ["#FD4C49", "#FF881E", "#007BFA", "#6E44FE", "#33CF69", "#E66DD4", "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC", "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"]
+    
+    // MARK: - Private Properties
+    private let scrollView = UIScrollView()
+    private let trackerCategoryStore = TrackerCategoryStore.shared
+    private let tableViewButtons = UITableView()
+    private let createButton = UIButton(type: .custom)
+    private let dismissButton = UIButton(type: .custom)
+    private let warningLabel = UILabel()
+    private let characterLimit = 38
+    private lazy var tableViewTopConstraint: NSLayoutConstraint = {
+        tableViewButtons.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 0)
+    }()
+    
     // MARK: - Override Methods
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         scrollView.endEditing(true)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setView()
+        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     // MARK: - Public Methods
@@ -77,7 +88,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
             trackerCategoryStore.addTrackersCategory(idCategory: idCategory, tracker: tracker)
             delegate.refreshTrackersConstraints()
         }
-    }
+    } 
     
     func addCategory(toCategory: String){
         guard let delegate else { return }
@@ -106,8 +117,10 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
     
     // MARK: - Private Methods
     func setView() {
-        contentView.backgroundColor = .white
-        scrollView.backgroundColor = .white
+        textFieldTopAnchorConstraint = textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 28)
+        
+        contentView.backgroundColor = .systemBackground
+        scrollView.backgroundColor = .systemBackground
         scrollView.frame = view.bounds
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -127,7 +140,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor)
         ])
-       
+        
         collectionView.reloadData()
         
         tableViewButtons.dataSource = self
@@ -147,7 +160,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
                                                        right: 16)
         contentView.addSubview(tableViewButtons)
         
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = NSLocalizedString("creatingView.textField.placeholder", comment: "")
         textField.leftView = UIView(frame:
                                         CGRect(x: 0,
                                                y: 0,
@@ -164,7 +177,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
                             for: .editingChanged)
         contentView.addSubview(textField)
         
-        warningLabel.text = "Ограничение \(characterLimit) символов"
+        warningLabel.text =  String(format: NSLocalizedString("creatingView.warningLabel", comment: ""), characterLimit)
         warningLabel.textColor = .red
         warningLabel.font = UIFont.systemFont(ofSize: 17)
         warningLabel.textAlignment = .center
@@ -172,7 +185,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
         warningLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(warningLabel)
         
-        createButton.setTitle("Создать", for: .normal)
+        createButton.setTitle(NSLocalizedString("creatingView.creatingButton.title", comment: ""), for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.tintColor = .white
@@ -181,7 +194,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
                                for: .touchUpInside)
         disableButton()
         
-        dismissButton.setTitle("Отменить", for: .normal)
+        dismissButton.setTitle(NSLocalizedString("creatingView.cancellingButton.title", comment: ""), for: .normal)
         dismissButton.layer.cornerRadius = 16
         dismissButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         dismissButton.setTitleColor(.red, for: .normal)
@@ -206,7 +219,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
             
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 28),
+            textFieldTopAnchorConstraint ?? NSLayoutConstraint(),
             textField.heightAnchor.constraint(equalToConstant: 75),
             
             warningLabel.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 8),
@@ -233,11 +246,11 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
     
     private func enableButtonWithCond() {
         if  textField.text != "" &&
-            textField.text != nil &&
-            selectedCategory != nil &&
-            selectedSchedule != nil &&
-            selectedColor != nil &&
-            selectedEmoji != nil {
+                textField.text != nil &&
+                selectedCategory != nil &&
+                selectedSchedule != nil &&
+                selectedColor != nil &&
+                selectedEmoji != nil {
             createButton.backgroundColor = .black
             createButton.isEnabled = true
         }
@@ -275,11 +288,11 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
     }
     
     @objc
-    private func createButtonDidTap() {
+    func createButtonDidTap() {
         guard let text = textField.text,
-        let selectedSchedule ,
-        let selectedEmoji,
-        let selectedColor else { return }
+              let selectedSchedule ,
+              let selectedEmoji,
+              let selectedColor else { return }
         
         let newTracker = Tracker(id: UUID(), name: text, colorHex: selectedColor, emoji: selectedEmoji, schedule: selectedSchedule)
         addTracker(tracker: newTracker, toCategory: selectedCategory ?? "")
@@ -312,7 +325,7 @@ extension CreatingViewController: UITableViewDelegate, UITableViewDataSource {
         cell.backgroundColor = UIColor(named: "BackGroundFields")
         cell.accessoryType = .disclosureIndicator
         cell.selectionStyle = .none
-        let mainText = indexPath.row == 0 ? "Категория" : "Расписание"
+        let mainText = indexPath.row == 0 ? NSLocalizedString("creatingView.categoryTitle", comment: "") : NSLocalizedString("creatingView.scheduleTitle", comment: "")
         let subText = indexPath.row == 0 ? selectedCategory : selectedSchedule?.toString()
         cell.configure(mainText: mainText, subText: subText)
         return cell
@@ -322,12 +335,9 @@ extension CreatingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-         tableView.deselectRow(at: indexPath, animated: false)
+            tableView.deselectRow(at: indexPath, animated: false)
             
-            let selectCategoryViewController = SelectCategoryViewController(
-                viewModel: SelectCategoryViewModel(delegateTrackersView: delegate,
-                                                   delegateCreatingView: self)
-            )
+            let selectCategoryViewController = SelectCategoryViewController(delegateTrackersView: delegate, delegateCreatingView: self)
             present(selectCategoryViewController, animated: true)
             
         } else {
@@ -341,8 +351,8 @@ extension CreatingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
     }
-
 }
+
 extension CreatingViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout  {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         section == 0 ? emojiList.count : colorList.count
@@ -382,7 +392,7 @@ extension CreatingViewController : UICollectionViewDelegate, UICollectionViewDat
             return UICollectionReusableView()
         }
         
-        header.titleLabel.text = indexPath.section == 0 ? "Emoji" : "Цвета"
+        header.titleLabel.text = indexPath.section == 0 ? NSLocalizedString("creatingView.emojiTitle", comment: "") : NSLocalizedString("creatingView.colorTitle", comment: "")
         
         return header
     }
@@ -418,4 +428,4 @@ extension CreatingViewController : UICollectionViewDelegate, UICollectionViewDat
 }
 
 
- 
+

@@ -1,4 +1,61 @@
-"emptyState.title" = "Что будем отслеживать?";
-"delete" = "Удалить";
-"delete.confirmation" = "Уверены что хотите удалить трекер?";
-"cancel" = "Отменить"; 
+"onBoarding.firstTitle" = "Track only what you want";
+"onBoarding.secondTitle" = "Even if it's not liters of water and yoga";
+"onBoarding.buttonTitle" = "Now that's technology!";
+
+"trackersView.title" = "Trackers";
+"trackersView.emptyState.title" = "What shall we track?";
+"trackersView.searchBar.placeHolder" = "Search";
+"trackersView.pinnedCategory" = "Pinned";
+"trackersView.filterButton" = "Filter";
+"trackersView.NotFound.title" = "Not found";
+
+"tabBarView.trackerView.title" = "Trackers";
+"tabBarView.statisticView.title" = "Statistics";
+
+"trackerCreatingView.title" = "Create Tracker";
+"trackerCreatingView.habitTitle" = "Habit";
+"trackerCreatingView.irregularEventTitle" = "Irregular Event";
+
+"creatingView.irregularEventTitle" = "New Irregular Event";
+"creatingView.EditTrackerTitle" = "Edit tracker";
+"creatingView.habitTitle" = "New Habit";
+"creatingView.textField.placeholder" = "Enter tracker name";
+"creatingView.warningLabel" = "%d character limit";
+"creatingView.categoryTitle" = "Categories";
+"creatingView.scheduleTitle" = "Schedule";
+"creatingView.colorTitle" = "Color";
+"creatingView.emojiTitle" = "Emoji";
+"creatingView.creatingButton.title" = "Create";
+"creatingView.cancellingButton.title" = "Cancel";
+
+"selectCategory.title" = "Category";
+"selectCategory.emptyState.title" = "Habits and events can\nbe grouped meaningfully";
+"selectCategory.button.title" = "Add Category";
+
+"selectSchedule.Monday" = "Monday";
+"selectSchedule.Tuesday" = "Tuesday";
+"selectSchedule.Wednesday" = "Wednesday";
+"selectSchedule.Thursday" = "Thursday";
+"selectSchedule.Friday" = "Friday";
+"selectSchedule.Saturday" = "Saturday";
+"selectSchedule.Sunday" = "Sunday";
+"selectSchedule.title" = "Schedule";
+"selectSchedule.createButton.Title" = "Done";
+
+"categoryCreating.textField.placeHolder" = "Enter category name";
+"categoryCreating.button.title" = "Done";
+"categoryCreating.title" = "New Category";
+
+"TrackerCell.action.pin" = "Pin";
+"TrackerCell.action.unpin" = "Unpin";
+"TrackerCell.action.edit" = "Edit";
+"TrackerCell.action.delete" = "Delete";
+
+"filterCategory.title" = "Filters";
+
+"statisticView.title" = "Statistic";
+"statisticView.BestPeriod" = "Best Period";
+"statisticView.PerfectDay" = "Perfect Days";
+"statisticView.Completed" = "Trackers Completed";
+"statisticView.Average" = "Average";
+

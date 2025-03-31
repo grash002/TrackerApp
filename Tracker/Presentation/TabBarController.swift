@@ -5,15 +5,15 @@ final class TabBarController: UITabBarController {
         super.viewDidLoad()
         
         let trackersViewController = TrackersViewController()
-        trackersViewController.tabBarItem = UITabBarItem(title: "Трекеры",
-                                                        image: UIImage(named: "TrackerTabBar"),
-                                                        selectedImage: nil)
+        trackersViewController.tabBarItem = UITabBarItem(title: NSLocalizedString("tabBarView.trackerView.title", comment: ""),
+                                                         image: UIImage(named: "TrackerTabBar"),
+                                                         selectedImage: nil)
         
         let statisticViewController = StatisticViewController()
         
-        statisticViewController.tabBarItem = UITabBarItem(title: "Статистика",
-                                                        image: UIImage(named: "StatisticTabBar"),
-                                                        selectedImage: nil)
+        statisticViewController.tabBarItem = UITabBarItem(title: NSLocalizedString("tabBarView.statisticView.title", comment: ""),
+                                                          image: UIImage(named: "StatisticTabBar"),
+                                                          selectedImage: nil)
         
         let topBorder = CALayer()
         topBorder.backgroundColor = UIColor.lightGray.cgColor

@@ -4,11 +4,10 @@ final class IrregularEventCreatingViewController: CreatingViewController {
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
-        super.viewDidLoad()
         selectedSchedule = Schedule(days: [.eternity])
         tableViewButtonsHeight = 75
-        titleLabel.text = "Новое нерегулярное событие"
-        setView()
+        titleLabel.text = NSLocalizedString("creatingView.irregularEventTitle", comment: "")
+        super.viewDidLoad()
     }
 }
 
@@ -20,7 +19,7 @@ extension IrregularEventCreatingViewController {
     }
     
     override func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
+                            numberOfRowsInSection section: Int) -> Int {
         1
     }
     

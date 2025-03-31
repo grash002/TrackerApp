@@ -6,4 +6,5 @@ struct Tracker {
     let colorHex: String
     let emoji: String
     let schedule: Schedule
+    var pinnedFlag: Bool = false
 }
