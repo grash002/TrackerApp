@@ -22,6 +22,7 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
         analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
@@ -37,8 +38,8 @@ final class CategoryCreatingViewController: UIViewController, UITextFieldDelegat
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
-        
         createButton.setTitle(NSLocalizedString("categoryCreating.button.title", comment: ""), for: .normal)
+
         createButton.layer.cornerRadius = 16
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.setTitleColor(.invertedLabel, for: .normal)

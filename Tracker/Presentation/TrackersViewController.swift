@@ -167,8 +167,7 @@ final class TrackersViewController: UIViewController, TrackersViewControllerProt
         
         setStackViewNoTrackers()
         setPinnedTrackers()
-        
-        
+       
         collectionView.reloadData()
     }
     

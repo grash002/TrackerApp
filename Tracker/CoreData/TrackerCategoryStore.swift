@@ -75,10 +75,9 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
                 ids.append(tracker.id.uuidString)
                 category.idTrackers = ids
             }
+            dataBaseStore.saveContext()
+            trackerStore.createTracker(tracker)
         }
-        dataBaseStore.saveContext()
-        trackerStore.createTracker(tracker)
-    }
     
     func createTrackerCategory(idCategory: UUID, categoryName: String){
         updateTrackersCategory(tracker: nil,

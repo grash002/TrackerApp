@@ -88,7 +88,6 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     }()
     private let analyticsService = AnalyticsService()
     
-    
     // MARK: - Initializers
     override init(transitionStyle style: UIPageViewController.TransitionStyle,
                   navigationOrientation: UIPageViewController.NavigationOrientation,

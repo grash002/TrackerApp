@@ -84,7 +84,6 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    
     func fetchTrackers() -> [Tracker] {
         
         guard let fetchedResultsController else { return [] }

@@ -20,6 +20,7 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
         return titleLabel
     }()
     lazy var collectionView: UICollectionView = {
+
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 50, height: 50)
         layout.minimumLineSpacing = 0
@@ -338,6 +339,7 @@ extension CreatingViewController: UITableViewDelegate, UITableViewDataSource {
             tableView.deselectRow(at: indexPath, animated: false)
             
             let selectCategoryViewController = SelectCategoryViewController(delegateTrackersView: delegate, delegateCreatingView: self)
+
             present(selectCategoryViewController, animated: true)
             
         } else {

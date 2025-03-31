@@ -91,7 +91,7 @@ final class SelectCategoryViewController: UIViewController {
             categoryCreatingVC.delegate = self
             self?.present(categoryCreatingVC, animated: true)
         }
-        
+      
         viewModel.onAddCategoryRequested = { [weak delegateCreatingView] title in
             delegateCreatingView?.addCategory(toCategory: title)
         }
@@ -203,11 +203,13 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
                                                  for: indexPath)
+
         cell.backgroundColor = UIColor { trait in
             trait.userInterfaceStyle == .dark
                 ? UIColor(white: 0.15, alpha: 1)
                 : UIColor(white: 0.95, alpha: 1)
         }
+
         cell.selectionStyle = .none
         cell.textLabel?.text = viewModel.categories[indexPath.row].title
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
