@@ -78,85 +78,86 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
             dataBaseStore.saveContext()
             trackerStore.createTracker(tracker)
         }
-    
-    func createTrackerCategory(idCategory: UUID, categoryName: String){
-        updateTrackersCategory(tracker: nil,
-                               idCategory: idCategory,
-                               categoryName: categoryName)
+    }
         
-        
-        let request = TrackerCategoryCoreData.fetchRequest()
-        request.predicate = NSPredicate(
-            format: "idTrackerCategory == %@",
-            idCategory as CVarArg
-        )
-        
-        do {
-            if try context.fetch(request).isEmpty {
-                let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
-                trackerCategoryCoreData.idTrackerCategory = idCategory
-                trackerCategoryCoreData.categoryName = categoryName
-                
-                dataBaseStore.saveContext()
+        func createTrackerCategory(idCategory: UUID, categoryName: String){
+            updateTrackersCategory(tracker: nil,
+                                   idCategory: idCategory,
+                                   categoryName: categoryName)
+            
+            
+            let request = TrackerCategoryCoreData.fetchRequest()
+            request.predicate = NSPredicate(
+                format: "idTrackerCategory == %@",
+                idCategory as CVarArg
+            )
+            
+            do {
+                if try context.fetch(request).isEmpty {
+                    let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
+                    trackerCategoryCoreData.idTrackerCategory = idCategory
+                    trackerCategoryCoreData.categoryName = categoryName
+                    
+                    dataBaseStore.saveContext()
+                }
+            } catch {
+                print("Ошибка при создании категории: \(error.localizedDescription)")
             }
-        } catch {
-            print("Ошибка при создании категории: \(error.localizedDescription)")
         }
-    }
-    
-    func fetchTrackersCategory() -> [TrackerCategory] {
-        let fetchTrackers = trackerStore.fetchTrackers()
         
-        
-        return fetchedResultsController?.fetchedObjects?.compactMap { category in
-            guard let idTrackerCategory = category.idTrackerCategory, let categoryName = category.categoryName else {
-                print("Ошибка при извлечении данных TrackerCategoryCoreData")
-                return nil
-            }
+        func fetchTrackersCategory() -> [TrackerCategory] {
+            let fetchTrackers = trackerStore.fetchTrackers()
             
-            let idTrackers = category.idTrackers ?? []
-            let trackers: [Tracker] = idTrackers.compactMap { idTrackerString in
-                fetchTrackers.first { $0.id == UUID(uuidString: idTrackerString) }
-            }
             
-            return TrackerCategory(id: idTrackerCategory, title: categoryName, trackers: trackers)
-        } ?? []
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.storeTrackerCategory()
-    }
-    
-    func removeTrackerFromCore(id: UUID) {
-        let request = TrackerCategoryCoreData.fetchRequest()
+            return fetchedResultsController?.fetchedObjects?.compactMap { category in
+                guard let idTrackerCategory = category.idTrackerCategory, let categoryName = category.categoryName else {
+                    print("Ошибка при извлечении данных TrackerCategoryCoreData")
+                    return nil
+                }
+                
+                let idTrackers = category.idTrackers ?? []
+                let trackers: [Tracker] = idTrackers.compactMap { idTrackerString in
+                    fetchTrackers.first { $0.id == UUID(uuidString: idTrackerString) }
+                }
+                
+                return TrackerCategory(id: idTrackerCategory, title: categoryName, trackers: trackers)
+            } ?? []
+        }
         
-        if let categories = try? context.fetch(request){
-            for category in categories {
-                if let ids = category.idTrackers, ids.contains(id.uuidString) {
-                    category.idTrackers = ids.filter { $0 != id.uuidString }
+        func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+            delegate?.storeTrackerCategory()
+        }
+        
+        func removeTrackerFromCore(id: UUID) {
+            let request = TrackerCategoryCoreData.fetchRequest()
+            
+            if let categories = try? context.fetch(request){
+                for category in categories {
+                    if let ids = category.idTrackers, ids.contains(id.uuidString) {
+                        category.idTrackers = ids.filter { $0 != id.uuidString }
+                    }
                 }
             }
+            dataBaseStore.saveContext()
+            
+            trackerRecordStore.deleteRecords(id: id)
         }
-        dataBaseStore.saveContext()
         
-        trackerRecordStore.deleteRecords(id: id)
-    }
-    
-    // MARK: - Private Methods
-    
-    private func setupFetchedResultsController() {
-        let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "categoryName", ascending: true)]
+        // MARK: - Private Methods
         
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request,
-                                                              managedObjectContext: context,
-                                                              sectionNameKeyPath: nil,
-                                                              cacheName: nil)
-        fetchedResultsController?.delegate = self
-        do {
-            try fetchedResultsController?.performFetch()
-        } catch {
-            print("Ошибка при загрузке данных: \(error.localizedDescription)")
+        private func setupFetchedResultsController() {
+            let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "categoryName", ascending: true)]
+            
+            fetchedResultsController = NSFetchedResultsController(fetchRequest: request,
+                                                                  managedObjectContext: context,
+                                                                  sectionNameKeyPath: nil,
+                                                                  cacheName: nil)
+            fetchedResultsController?.delegate = self
+            do {
+                try fetchedResultsController?.performFetch()
+            } catch {
+                print("Ошибка при загрузке данных: \(error.localizedDescription)")
+            }
         }
-    }
 }
