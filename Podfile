@@ -10,6 +10,7 @@ pod 'AppMetricaAnalytics', '5.9.0'
   target 'TrackerTests' do
     inherit! :search_paths
     # Pods for testing
+pod 'SnapshotTesting', '1.8.1'
   end
 
 end

@@ -81,9 +81,11 @@ PODS:
     - KSCrash/RecordingCore
   - KSCrash/RecordingCore (2.0.0):
     - KSCrash/Core
+  - SnapshotTesting (1.8.1)
 
 DEPENDENCIES:
   - AppMetricaAnalytics (= 5.9.0)
+  - SnapshotTesting (= 1.8.1)
 
 SPEC REPOS:
   trunk:
@@ -108,6 +110,7 @@ SPEC REPOS:
     - AppMetricaSynchronization
     - AppMetricaWebKit
     - KSCrash
+    - SnapshotTesting
 
 SPEC CHECKSUMS:
   AppMetricaAdSupport: 030ecf754defdf915849ed5b2c0a9f2a2f44658d
@@ -131,7 +134,8 @@ SPEC CHECKSUMS:
   AppMetricaSynchronization: ed4196effc6997921fab53503e79c6505dbae707
   AppMetricaWebKit: 568f2057ae462b792b0b04eeeaffdd3b2af1f2b3
   KSCrash: ad271a7799f0a2841be0fb7d6bd105444c440832
+  SnapshotTesting: 0bf562bd74d3e9d053cd8f1123bd7b8913304df4
 
-PODFILE CHECKSUM: 0aea3ed8bc7a3955822960652d864397641b2f25
+PODFILE CHECKSUM: 047303fce09e787db9439891944f13ebb9e890c4
 
 COCOAPODS: 1.16.2

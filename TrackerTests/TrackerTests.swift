@@ -7,7 +7,7 @@ final class TrackerTests: XCTestCase {
     func testViewController() {
         let vc = TabBarController()
         vc.overrideUserInterfaceStyle = .dark
-        assertSnapshot(of: vc, as: .image)
+        assertSnapshot(matching: vc, as: .image)
     }
     
 }
