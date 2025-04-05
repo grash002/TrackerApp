@@ -15,7 +15,7 @@ final class HabitCreatingCell: UITableViewCell {
         //contentView.backgroundColor = UIColor(named: "BackGroundFields")
         
         mainLabel.font = UIFont.systemFont(ofSize: 17)
-        mainLabel.textColor = .black
+        mainLabel.textColor = .label
         mainLabel.translatesAutoresizingMaskIntoConstraints = false
         
         subLabel.font = UIFont.systemFont(ofSize: 17)

@@ -22,4 +22,20 @@ extension UIColor {
 
         self.init(red: red, green: green, blue: blue, alpha: alpha)
     }
+    
+    static var invertedLabel: UIColor {
+        return UIColor { traitCollection in
+            return traitCollection.userInterfaceStyle == .dark
+                ? .black
+                : .white
+        }
+    }
+    
+    static var customBackGround2: UIColor {
+        return UIColor { traitCollection in
+            return traitCollection.userInterfaceStyle == .dark
+            ? UIColor(red: 65, green: 65, blue: 65, alpha: 0.85)
+            : UIColor(red: 230, green: 232, blue: 235, alpha: 0.3)
+        }
+    }
 }

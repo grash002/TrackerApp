@@ -16,11 +16,11 @@ final class SelectCategoryViewController: UIViewController {
     
     lazy private var createButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle(NSLocalizedString("selectCategory.button.title", comment: ""), for: .normal)
         button.layer.cornerRadius = 16
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        button.tintColor = .white
-        button.backgroundColor = .black
+        button.setTitleColor(.invertedLabel, for: .normal)
+        button.backgroundColor = .label
         button.addTarget(self,
                          action: #selector(createButtonDidTap),
                          for: .touchUpInside)
@@ -31,10 +31,10 @@ final class SelectCategoryViewController: UIViewController {
     
     lazy private var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Категория"
+        label.text = NSLocalizedString("selectCategory.title", comment: "")
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .black
+        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(label)
         return label
@@ -59,7 +59,7 @@ final class SelectCategoryViewController: UIViewController {
     
     lazy private var labelNoTrackers = {
         let label = UILabel()
-        label.text = "Привычки и события можно\n объединить по смыслу"
+        label.text = NSLocalizedString("selectCategory.emptyState.title", comment: "")
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -91,21 +91,21 @@ final class SelectCategoryViewController: UIViewController {
             categoryCreatingVC.delegate = self
             self?.present(categoryCreatingVC, animated: true)
         }
-        
-        viewModel.onAddCategoryRequested = { [weak self] title in
-            self?.delegateCreatingView?.addCategory(toCategory: title)
+      
+        viewModel.onAddCategoryRequested = { [weak delegateCreatingView] title in
+            delegateCreatingView?.addCategory(toCategory: title)
         }
         
-        viewModel.onGetCategoriesRequested = { [weak self] in
-            self?.delegateTrackersView?.categories
+        viewModel.onGetCategoriesRequested = { [weak delegateTrackersView] in
+            delegateTrackersView?.categories
         }
         
-        viewModel.onGetCategoriesRequested = { [weak self] in
-            self?.delegateTrackersView?.categories
+        viewModel.onGetCategoriesRequested = { [weak delegateTrackersView] in
+            delegateTrackersView?.categories
         }
         
-        viewModel.onSelectCategoryRequested = { [weak self] title in
-            self?.delegateCreatingView?.selectCategory(categoryTitle: title)
+        viewModel.onSelectCategoryRequested = { [weak delegateCreatingView] title in
+            delegateCreatingView?.selectCategory(categoryTitle: title)
         }
         
         setView()
@@ -167,7 +167,7 @@ final class SelectCategoryViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         refreshConstraints()
         
         NSLayoutConstraint.activate([
@@ -203,10 +203,17 @@ extension SelectCategoryViewController: UITableViewDelegate, UITableViewDataSour
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
                                                  for: indexPath)
-        cell.backgroundColor = UIColor(named: "BackGroundFields")
+
+        cell.backgroundColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark
+                ? UIColor(white: 0.15, alpha: 1)
+                : UIColor(white: 0.95, alpha: 1)
+        }
+
         cell.selectionStyle = .none
         cell.textLabel?.text = viewModel.categories[indexPath.row].title
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17)
+        cell.textLabel?.textColor = .label
         return cell
     }
     

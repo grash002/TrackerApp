@@ -8,24 +8,35 @@ final class SelectScheduleViewController: UIViewController {
     private let tableViewSchedule = UITableView()
     private let createButton = UIButton(type: .custom)
     private let totalRows = 7
-    private let weakDays = ["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота","Воскресенье"]
+    private let weakDays = [NSLocalizedString("selectSchedule.Monday", comment: ""),
+                            NSLocalizedString("selectSchedule.Tuesday", comment: ""),
+                            NSLocalizedString("selectSchedule.Wednesday", comment: ""),
+                            NSLocalizedString("selectSchedule.Thursday", comment: ""),
+                            NSLocalizedString("selectSchedule.Friday", comment: ""),
+                            NSLocalizedString("selectSchedule.Saturday", comment: ""),
+                            NSLocalizedString("selectSchedule.Sunday", comment: "")]
     private var schedule = Schedule(days: [])
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
+        AnalyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        AnalyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     // MARK: - Private Methods
     private func setView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         let titleLabel = UILabel()
-        titleLabel.text = "Расписание"
+        titleLabel.text = NSLocalizedString("selectSchedule.title", comment: "")
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .label
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
@@ -34,7 +45,7 @@ final class SelectScheduleViewController: UIViewController {
         tableViewSchedule.register(ScheduleCell.self,
                                    forCellReuseIdentifier: ScheduleCell.identifier)
         tableViewSchedule.translatesAutoresizingMaskIntoConstraints = false
-        tableViewSchedule.backgroundColor = .white
+        tableViewSchedule.backgroundColor = .systemBackground
         tableViewSchedule.layer.cornerRadius = 16
         tableViewSchedule.tableFooterView = UIView()
         tableViewSchedule.separatorInset = UIEdgeInsets(top: 0,
@@ -43,11 +54,11 @@ final class SelectScheduleViewController: UIViewController {
                                                         right: 16)
         view.addSubview(tableViewSchedule)
         
-        createButton.setTitle("Готово", for: .normal)
+        createButton.setTitle(NSLocalizedString("selectSchedule.createButton.Title", comment: ""), for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        createButton.tintColor = .white
-        createButton.backgroundColor = .black
+        createButton.backgroundColor = .label
+        createButton.setTitleColor(.invertedLabel, for: .normal)
         createButton.addTarget(self,
                                action: #selector(createButtonDidTap),
                                for: .touchUpInside)

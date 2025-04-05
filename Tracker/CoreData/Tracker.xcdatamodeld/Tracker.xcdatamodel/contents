@@ -10,6 +10,7 @@
         <attribute name="colorHex" optional="YES" attributeType="String"/>
         <attribute name="emoji" optional="YES" attributeType="String"/>
         <attribute name="idTracker" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="pinnedFlag" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="schedule" optional="YES" attributeType="String"/>
         <attribute name="trackerName" optional="YES" attributeType="String"/>
         <relationship name="trackercategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackerCoreData" inverseName="trackercategory" inverseEntity="TrackerCoreData"/>

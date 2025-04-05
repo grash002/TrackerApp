@@ -70,8 +70,20 @@ final class TrackerRecordStore: NSObject, NSFetchedResultsControllerDelegate {
         return fetchedResultsController?.fetchedObjects?.compactMap { item in
             guard let idTracker = item.idTracker else { return nil }
             let trackingDates = item.trackingDates ?? []
-            return CompletedTrackers(trackedId: idTracker, dates: trackingDates)
+            return CompletedTrackers(trackerId: idTracker, dates: trackingDates)
         } ?? []
+    }
+    
+    func deleteRecords(id: UUID) {
+        let fetchRequest = TrackerRecordCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "idTracker == %@", id as CVarArg)
+
+        if let results = try? context.fetch(fetchRequest){
+            for record in results {
+                context.delete(record)
+            }
+        }
+        dataBaseStore.saveContext()
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
