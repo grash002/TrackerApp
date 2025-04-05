@@ -4,17 +4,16 @@ final class TrackerCreatingViewController: UIViewController {
     
     // MARK: - Public Properties
     weak var delegate: TrackersViewController?
-    let analyticsService = AnalyticsService()
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()      
-        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     // MARK: - Private Methods

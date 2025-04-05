@@ -212,8 +212,7 @@
 				EE3411BD2D9BD655009FC6A3 /* AnalyticsService.swift */,
 				EE3411BF2D9BD655009FC6A3 /* Configuration.swift */,
 			);
-			name = AnalyticService;
-			path = StatisticService/AnalyticService;
+			path = AnalyticService;
 			sourceTree = "<group>";
 		};
 		EE36C20D2D9AC92C00726E20 /* StatisticService */ = {

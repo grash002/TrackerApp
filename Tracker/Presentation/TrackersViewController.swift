@@ -10,7 +10,6 @@ final class TrackersViewController: UIViewController, TrackersViewControllerProt
     var filterState = FilterState.all
     
     // MARK: - Private Properties
-    private let analyticsService = AnalyticsService()
     private let formatter = DateFormatter()
     private let datePicker = UIDatePicker()
     private let trackerCategoryStore = TrackerCategoryStore.shared
@@ -132,11 +131,11 @@ final class TrackersViewController: UIViewController, TrackersViewControllerProt
         dateChanged(datePicker)
         setView()
         
-        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -239,7 +238,7 @@ final class TrackersViewController: UIViewController, TrackersViewControllerProt
             selectedCategories = selectedCategories.compactMap({ category in
                 var mutatingCategory = category
                 
-                var trackers = category.trackers.compactMap({ tracker in
+                let trackers = category.trackers.compactMap({ tracker in
                     if let indexTracker = completedTrackers.firstIndex(where: {$0.trackerId == tracker.id }),
                        completedTrackers[indexTracker].dates.contains(pickedDate) {
                         return tracker
@@ -316,7 +315,7 @@ final class TrackersViewController: UIViewController, TrackersViewControllerProt
         let view = FiltersViewController()
         view.delegate = self
         
-        analyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.filter.rawValue])
+        AnalyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.filter.rawValue])
         self.present(view, animated: true)
     }
     
@@ -325,7 +324,7 @@ final class TrackersViewController: UIViewController, TrackersViewControllerProt
         let view = TrackerCreatingViewController()
         view.delegate = self
         
-        analyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.add_track.rawValue])
+        AnalyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.add_track.rawValue])
         present(view, animated: true)
     }
     
@@ -391,7 +390,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         let onSaveCountDays = {[weak self] addButtonDidTapFlag in
             guard let self else { return }
             NotificationCenter.default.post(name: .didTapCompleteButton, object: nil)
-            self.analyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.track.rawValue])
+            AnalyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.track.rawValue])
             
             if !addButtonDidTapFlag {
                 trackerRecordStore.createTrackerRecord(trackerId: item.id, trackingDate: pickedDate)
@@ -411,7 +410,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         }
         let onTapMenuEdit = { [weak self] in
             
-            self?.analyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.edit.rawValue])
+            AnalyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.edit.rawValue])
             
             let editCreatingViewController = EditTrackerViewController(tracker: item, categoryName: categoryName, countDays: countDays)
             editCreatingViewController.delegate = self
@@ -420,7 +419,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         }
         let onTapMenuDelete = { [weak self] in
             
-            self?.analyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.delete.rawValue])
+            AnalyticsService.report(event: AnalyticEvents.click.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self), AnalyticField.item.rawValue: AnalyticItem.delete.rawValue])
             
             let alert = UIAlertController(title: "",
                                           message: "Уверены что хотите удалить трекер?",

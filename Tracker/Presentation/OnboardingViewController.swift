@@ -86,7 +86,6 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         view.addSubview(button)
         return button
     }()
-    private let analyticsService = AnalyticsService()
     
     // MARK: - Initializers
     override init(transitionStyle style: UIPageViewController.TransitionStyle,
@@ -127,11 +126,11 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
             onboardingButton.heightAnchor.constraint(equalToConstant: 60),
             
         ])
-        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     

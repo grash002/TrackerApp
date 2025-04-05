@@ -31,11 +31,11 @@ final class EditTrackerViewController: CreatingViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         enterFields()
-        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     @objc

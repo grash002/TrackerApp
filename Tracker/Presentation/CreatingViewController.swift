@@ -3,7 +3,6 @@ import UIKit
 class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingViewControllerProtocol {
     // MARK: - Public Properties
     
-    let analyticsService = AnalyticsService()
     weak var delegate: TrackersViewController?
     var tableViewButtonsHeight: CGFloat = 150
     var selectedEmoji: String?
@@ -67,11 +66,11 @@ class CreatingViewController: UIViewController, UITextFieldDelegate, CreatingVie
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
-        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     // MARK: - Public Methods

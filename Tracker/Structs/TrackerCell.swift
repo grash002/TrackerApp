@@ -114,7 +114,17 @@ final class TrackerCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(nameTracker: String, emoji: String, color: UIColor, isDidTap: Bool, count: Int, isDisableAddButton: Bool, pinnedFlag: Bool, onSaveCountDays: @escaping ((Bool) -> Void), onTapMenuPin: @escaping (()-> Void), onTapMenuEdit: @escaping (()-> Void), onTapMenuDelete: @escaping (()-> Void)) {
+    func configure(nameTracker: String, 
+                   emoji: String,
+                   color: UIColor,
+                   isDidTap: Bool, 
+                   count: Int,
+                   isDisableAddButton: Bool,
+                   pinnedFlag: Bool,
+                   onSaveCountDays: @escaping ((Bool) -> Void),
+                   onTapMenuPin: @escaping (()-> Void),
+                   onTapMenuEdit: @escaping (()-> Void),
+                   onTapMenuDelete: @escaping (()-> Void)) {
         emojiLabel.text = emoji
         titleLabel.text = nameTracker
         viewCardTracker.backgroundColor = color

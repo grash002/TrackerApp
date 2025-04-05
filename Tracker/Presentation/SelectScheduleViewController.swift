@@ -16,17 +16,16 @@ final class SelectScheduleViewController: UIViewController {
                             NSLocalizedString("selectSchedule.Saturday", comment: ""),
                             NSLocalizedString("selectSchedule.Sunday", comment: "")]
     private var schedule = Schedule(days: [])
-    private let analyticsService = AnalyticsService()
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setView()
-        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     // MARK: - Private Methods

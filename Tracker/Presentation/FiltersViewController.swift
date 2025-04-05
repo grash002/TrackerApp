@@ -16,22 +16,22 @@ final class FiltersViewController: UIViewController {
         self.view.addSubview(label)
         return label
     }()
-    private let tableViewCategories = UITableView()
+    lazy private var tableViewCategories = UITableView()
     private let filterStates = ["Все трекеры",
                                 "Трекеры на сегодня",
                                 "Завершенные",
                                 "Не завершенные" ]
     private var selectedRow: Int?
-    private let analyticsService = AnalyticsService()
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         setView()
-        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.close.rawValue , 
+                                params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func viewDidAppear(_ animated: Bool) {

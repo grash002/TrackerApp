@@ -4,7 +4,6 @@ import UIKit
 final class StatisticViewController: UIViewController {
     
     // MARK: - Private Properties
-    private let analyticsService = AnalyticsService()
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.textColor = .label
@@ -40,11 +39,11 @@ final class StatisticViewController: UIViewController {
             object: nil
         )
         
-        analyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.open.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        analyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
+        AnalyticsService.report(event: AnalyticEvents.close.rawValue , params: [AnalyticField.screen.rawValue: String(describing: self)])
     }
     
     // MARK: - Private Methods
